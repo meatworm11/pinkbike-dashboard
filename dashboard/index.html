@@ -1,0 +1,1887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pinkbike Deal Desk</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101112">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Deal Desk">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root {
+    --bg: #101112;
+    --surface: #171818;
+    --surface-2: #20211f;
+    --line: #30322f;
+    --line-strong: #45483f;
+    --text: #f4f2ed;
+    --muted: #aaa59a;
+    --soft: #d8d0bf;
+    --accent: #f15b5b;
+    --good: #37a779;
+    --warn: #d6a740;
+    --bad: #e05656;
+    --chip: #262824;
+    --shadow: 0 16px 40px rgba(0,0,0,.32);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(circle at 15% -10%, rgba(241,91,91,.2), transparent 30rem),
+      linear-gradient(180deg, #141513 0%, var(--bg) 38rem);
+    color: var(--text);
+  }
+  a { color: inherit; }
+  .shell { width: min(1440px, 100%); margin: 0 auto; padding: 20px 20px 56px; }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+    gap: 18px;
+    align-items: stretch;
+    margin-bottom: 16px;
+  }
+  .hero-main {
+    min-height: 190px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(23,24,24,.84);
+    box-shadow: var(--shadow);
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--soft);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--good);
+    border-radius: 999px;
+  }
+  h1 {
+    margin: 12px 0 8px;
+    max-width: 780px;
+    font-size: clamp(32px, 7vw, 66px);
+    line-height: .95;
+    letter-spacing: 0;
+  }
+  .subhead { max-width: 760px; color: var(--muted); font-size: 15px; }
+  .hero-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .metric {
+    min-height: 90px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(32,33,31,.86);
+  }
+  .metric-value { display: block; font-size: 30px; font-weight: 800; line-height: 1; }
+  .metric-label { display: block; margin-top: 7px; color: var(--soft); font-weight: 700; }
+  .metric-note { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 -20px 20px;
+    padding: 10px 20px;
+    border-top: 1px solid rgba(255,255,255,.04);
+    border-bottom: 1px solid var(--line);
+    background: rgba(16,17,18,.92);
+    backdrop-filter: blur(14px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .tabs, .filters { display: flex; gap: 8px; align-items: center; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar, .filters::-webkit-scrollbar { display: none; }
+  button, .action {
+    min-height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--soft);
+    font: inherit;
+    font-weight: 700;
+    padding: 8px 11px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  button[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: rgba(241,91,91,.14);
+    color: var(--text);
+  }
+  .search {
+    width: min(420px, 34vw);
+    min-height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d0e0e;
+    color: var(--text);
+    padding: 8px 11px;
+    font: inherit;
+  }
+  .layout { display: grid; gap: 22px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 12px;
+    margin: 10px 0 12px;
+  }
+  h2 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: 0; }
+  .section-meta { color: var(--muted); font-size: 13px; }
+  h3 {
+    margin: 18px 0 10px;
+    color: var(--soft);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    margin-left: 7px;
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .empty {
+    color: var(--muted);
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(23,24,24,.72);
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+  .card {
+    display: grid;
+    grid-template-columns: 142px minmax(0, 1fr);
+    min-height: 190px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(23,24,24,.92);
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  }
+  .card:hover { border-color: var(--line-strong); }
+  .thumb { position: relative; background: #0b0c0c; overflow: hidden; text-decoration: none; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .no-img { height: 100%; display: grid; place-items: center; color: var(--muted); font-size: 12px; }
+  .body { min-width: 0; padding: 13px; display: flex; flex-direction: column; gap: 9px; }
+  .topline { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--chip);
+    color: var(--soft);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .source-pb { background: #2c3328; color: #c9e7ba; }
+  .source-ou { background: #332b25; color: #ffd0a8; }
+  .status-buy { background: rgba(55,167,121,.18); color: #60d39d; }
+  .status-watch, .status-review { background: rgba(214,167,64,.18); color: #f0c96a; }
+  .status-pass { background: rgba(224,86,86,.16); color: #f17878; }
+  .status-new { background: rgba(241,91,91,.16); color: #ff9a9a; }
+  .status-candidate { background: rgba(216,208,191,.12); color: var(--soft); }
+  .status-user-good { background: rgba(55,167,121,.18); color: #79d9ad; }
+  .status-user-bad { background: rgba(224,86,86,.16); color: #f17878; }
+  .fit-good { background: rgba(55,167,121,.18); color: #79d9ad; }
+  .fit-ok { background: rgba(214,167,64,.18); color: #f0c96a; }
+  .fit-bad { background: rgba(224,86,86,.16); color: #f17878; }
+  .fit-unknown { background: rgba(216,208,191,.10); color: var(--muted); }
+  .title { margin: 0; font-size: 15px; line-height: 1.25; font-weight: 800; }
+  .title a { text-decoration: none; }
+  .title a:hover { color: var(--accent); }
+  .facts { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+  .price { color: var(--text); font-size: 20px; font-weight: 900; line-height: 1; }
+  .score { color: var(--good); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-weight: 800; }
+  .score.warn { color: var(--warn); }
+  .score.bad { color: var(--bad); }
+  .reasons { color: var(--muted); font-size: 12px; line-height: 1.35; }
+  .risk { display: flex; gap: 6px; flex-wrap: wrap; }
+  .risk span {
+    padding: 3px 7px;
+    border: 1px solid rgba(224,86,86,.35);
+    border-radius: 6px;
+    color: #f17878;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .card-footer { margin-top: auto; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .seen { color: var(--muted); font-size: 11px; }
+  .actions { display: flex; gap: 7px; align-items: center; }
+  .action { min-height: 30px; padding: 6px 8px; font-size: 12px; }
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(0,0,0,.56);
+    display: grid;
+    place-items: end center;
+    padding: 16px;
+  }
+  .modal {
+    width: min(560px, 100%);
+    max-height: min(720px, calc(100vh - 32px));
+    overflow: auto;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: #171818;
+    box-shadow: var(--shadow);
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-title { margin: 0; font-size: 16px; line-height: 1.25; }
+  .modal-body { padding: 14px; display: grid; gap: 12px; }
+  .modal-body p { margin: 0; color: var(--soft); }
+  .summary-facts { display: grid; gap: 8px; color: var(--muted); font-size: 13px; }
+  .summary-facts div { padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: #111212; }
+  .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  textarea {
+    width: 100%;
+    min-height: 112px;
+    resize: vertical;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d0e0e;
+    color: var(--text);
+    padding: 10px;
+    font: inherit;
+  }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
+  .status-line { min-height: 18px; color: var(--muted); font-size: 12px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 900px) {
+    .shell { padding: 12px 12px 44px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-main { min-height: 170px; padding: 18px; }
+    .toolbar { margin: 0 -12px 16px; padding: 9px 12px; grid-template-columns: 1fr; }
+    .search { width: 100%; }
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .hero-side { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .metric { min-height: 76px; padding: 10px; }
+    .metric-value { font-size: 24px; }
+    .metric-note { display: none; }
+    .card { grid-template-columns: 118px minmax(0, 1fr); min-height: 176px; }
+    .body { padding: 11px; gap: 7px; }
+    .title { font-size: 14px; }
+    .price { font-size: 18px; }
+    .reasons { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="hero">
+    <div class="hero-main">
+      <div class="eyebrow">Dana Point deal desk</div>
+      <h1>bike finder</h1>
+      <div class="subhead">Fresh local listings, review queue, and active shortlist from the latest scrape. Dana Point radius, $3,000 ceiling, Large-first fit.</div>
+    </div>
+    <div class="hero-side">
+<div class="metric"><span class="metric-value">11</span><span class="metric-label">New</span><span class="metric-note">latest scrape window</span></div><div class="metric"><span class="metric-value">12</span><span class="metric-label">Review</span><span class="metric-note">queue waiting</span></div><div class="metric"><span class="metric-value">37</span><span class="metric-label">Shortlist</span><span class="metric-note">active candidates</span></div><div class="metric"><span class="metric-value">27</span><span class="metric-label">Fit</span><span class="metric-note">Large or Medium</span></div><div class="metric"><span class="metric-value">1</span><span class="metric-label">XL</span><span class="metric-note">quick-pass size</span></div><div class="metric"><span class="metric-value">2</span><span class="metric-label">Reviewed</span><span class="metric-note">with verdicts</span></div>
+    </div>
+  </header>
+  <nav class="toolbar" aria-label="Dashboard controls">
+    <div class="tabs" role="tablist">
+      <button type="button" data-tab="all" aria-pressed="true">All</button>
+      <button type="button" data-tab="new" aria-pressed="false">New <span>11</span></button>
+      <button type="button" data-tab="review" aria-pressed="false">Review <span>12</span></button>
+      <button type="button" data-tab="shortlist" aria-pressed="false">Shortlist <span>37</span></button>
+    </div>
+    <div class="filters">
+      <button type="button" data-fit="preferred" aria-pressed="false">L/M only</button>
+      <button type="button" data-sort-recent aria-pressed="false" title="Sort by actual listing age where available. OfferUp age coverage: 44/44 (100%)." aria-label="Sort by actual listing age where available. OfferUp age coverage: 44/44 (100%).">Recent first</button>
+      <input class="search" type="search" placeholder="Search title, city, ID" aria-label="Search listings">
+    </div>
+  </nav>
+  <main class="layout">
+<section data-section="new"><div class="section-head"><div><h2>New since last run <span class="count">11</span></h2><div class="section-meta">Batch 2026-05-15 22:50 to 22:55; generated 2026-05-16 00:08</div></div></div><div class="grid"><article class="card" data-id="ou_a17cb4ba-cc69-3c8c-b903-738cd28cb08d" data-source="OU" data-title="2022 Trek fuel EX 8. Mountain bike" data-url="https://offerup.com/item/detail/a17cb4ba-cc69-3c8c-b903-738cd28cb08d" data-score="8.5" data-recent="1778889600" data-discovered="1778910624" data-fit="fit-good" data-search="2022 trek fuel ex 8. mountain bike irvine ou_a17cb4ba-cc69-3c8c-b903-738cd28cb08d ou l new">
+  <a class="thumb" href="https://offerup.com/item/detail/a17cb4ba-cc69-3c8c-b903-738cd28cb08d" target="_blank" rel="noopener"><img src="https://images.offerup.com/ZkcwGb0y5HqAQ6iRv_knhdYL6uQ=/333x250/f594/f594177270ff45328ae8a6077229cf3e.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/a17cb4ba-cc69-3c8c-b903-738cd28cb08d" target="_blank" rel="noopener">2022 Trek fuel EX 8. Mountain bike</a></div>
+    <div class="facts"><span class="price">$1650</span><span>Irvine</span><span>listed today</span><span>OfferUp</span><span class="score warn">score 8.5</span></div>
+    
+    <div class="reasons">premium brand (Trek) (+3) | fairly recent (2022) (+2.5) | good vs corpus (corpus median $2200 across 3 listings, listing 75%) (+1) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_cb9527a8-c362-36ce-96bb-080226035b80" data-source="OU" data-title="2021 Giant Trance 27.5er MTB Size MEDIUM" data-url="https://offerup.com/item/detail/cb9527a8-c362-36ce-96bb-080226035b80" data-score="6.5" data-recent="1778803200" data-discovered="1778910869" data-fit="fit-ok" data-search="2021 giant trance 27.5er mtb size medium mission viejo ou_cb9527a8-c362-36ce-96bb-080226035b80 ou m new">
+  <a class="thumb" href="https://offerup.com/item/detail/cb9527a8-c362-36ce-96bb-080226035b80" target="_blank" rel="noopener"><img src="https://images.offerup.com/m64TCt8BjPTd9n5jYGy7vQlGqP4=/333x250/71e1/71e100806d6f4391b1f6b1217f8ddc1a.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/cb9527a8-c362-36ce-96bb-080226035b80" target="_blank" rel="noopener">2021 Giant Trance 27.5er MTB Size MEDIUM</a></div>
+    <div class="facts"><span class="price">$1450</span><span>Mission Viejo</span><span>listed 1d ago</span><span>OfferUp</span><span class="score bad">score 6.5</span></div>
+    <div class="risk"><span>5y old</span></div>
+    <div class="reasons">premium brand (Giant) (+3) | aging (2021, 5y old) (-0.5) | premium drivetrain (XX SL) (+1.5) | premium wheels (enve) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_b3d75277-057d-3e20-af1b-618eb578e2ac" data-source="OU" data-title="Specialized M2 26” Stumpjumper 1998" data-url="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" data-score="5.75" data-recent="1764720000" data-discovered="1778910806" data-fit="fit-unknown" data-search="specialized m2 26” stumpjumper 1998 costa mesa ou_b3d75277-057d-3e20-af1b-618eb578e2ac ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" target="_blank" rel="noopener"><img src="https://images.offerup.com/mdcCywGoqH4lombG3nBKOjaVL5k=/250x250/9348/9348b3a7a50849cfa8e3d50fb83f250e.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" target="_blank" rel="noopener">Specialized M2 26” Stumpjumper 1998</a></div>
+    <div class="facts"><span class="price">$900</span><span>Costa Mesa</span><span>listed 5mo ago</span><span>OfferUp</span><span class="score bad">score 5.75</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | premium brakes (shimano xtr) (+0.75)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_16105128-98c0-3bbc-86c6-455a4b717388" data-source="OU" data-title="Specialized Stumpjumper Evo Carbon Comp" data-url="https://offerup.com/item/detail/16105128-98c0-3bbc-86c6-455a4b717388" data-score="5.5" data-recent="1750464000" data-discovered="1778910806" data-fit="fit-unknown" data-search="specialized stumpjumper evo carbon comp laguna beach ou_16105128-98c0-3bbc-86c6-455a4b717388 ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/16105128-98c0-3bbc-86c6-455a4b717388" target="_blank" rel="noopener"><img src="https://images.offerup.com/tiF3P7YvTWcP8Uk6LJVky4KcCKE=/250x250/688c/688c95fa1ade4646857a6148caab9fdb.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/16105128-98c0-3bbc-86c6-455a4b717388" target="_blank" rel="noopener">Specialized Stumpjumper Evo Carbon Comp</a></div>
+    <div class="facts"><span class="price">$2500</span><span>Laguna Beach</span><span>listed 11mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | 10 photos (+1) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_92741a1c-73eb-376a-bba4-c5258a322a9c" data-source="OU" data-title="Specialized Stumpjumper" data-url="https://offerup.com/item/detail/92741a1c-73eb-376a-bba4-c5258a322a9c" data-score="5.5" data-recent="1764806400" data-discovered="1778910806" data-fit="fit-unknown" data-search="specialized stumpjumper aliso viejo ou_92741a1c-73eb-376a-bba4-c5258a322a9c ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/92741a1c-73eb-376a-bba4-c5258a322a9c" target="_blank" rel="noopener"><img src="https://images.offerup.com/h7jvh3jjansqilUdBoFg-F1q4dg=/250x250/5a57/5a57c5bf40d84787a0147882d099132d.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/92741a1c-73eb-376a-bba4-c5258a322a9c" target="_blank" rel="noopener">Specialized Stumpjumper</a></div>
+    <div class="facts"><span class="price">$2700</span><span>Aliso Viejo</span><span>listed 5mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | provenance (bought new) (+1) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_4b8aed25-7d1f-34df-b15a-c2fa50606aa9" data-source="OU" data-title="Stumjumper Specialized" data-url="https://offerup.com/item/detail/4b8aed25-7d1f-34df-b15a-c2fa50606aa9" data-score="5" data-recent="1636502400" data-discovered="1778910806" data-fit="fit-unknown" data-search="stumjumper specialized irvine ou_4b8aed25-7d1f-34df-b15a-c2fa50606aa9 ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/4b8aed25-7d1f-34df-b15a-c2fa50606aa9" target="_blank" rel="noopener"><img src="https://images.offerup.com/CoF3gByeSP5UCKbbqy1wIYMRAEQ=/250x250/16e8/16e8217f1cdc40368a7a4c75cb245a24.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/4b8aed25-7d1f-34df-b15a-c2fa50606aa9" target="_blank" rel="noopener">Stumjumper Specialized</a></div>
+    <div class="facts"><span class="price">$1200</span><span>Irvine</span><span>listed 5y ago</span><span>OfferUp</span><span class="score bad">score 5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | premium drivetrain (XX1) (+1.5) | detailed description (895 chars) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_96cfd2e8-f11e-37be-83db-7075c1440736" data-source="OU" data-title="Giant Trance X Bike" data-url="https://offerup.com/item/detail/96cfd2e8-f11e-37be-83db-7075c1440736" data-score="4.5" data-recent="1750982400" data-discovered="1778910869" data-fit="fit-good" data-search="giant trance x bike tustin ou_96cfd2e8-f11e-37be-83db-7075c1440736 ou l new">
+  <a class="thumb" href="https://offerup.com/item/detail/96cfd2e8-f11e-37be-83db-7075c1440736" target="_blank" rel="noopener"><img src="https://images.offerup.com/DKqZ-AyubNS0433_byFqig9iqoA=/250x250/6aef/6aef6d6181854fd0bfc3e5b0ce368721.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/96cfd2e8-f11e-37be-83db-7075c1440736" target="_blank" rel="noopener">Giant Trance X Bike</a></div>
+    <div class="facts"><span class="price">$1350</span><span>Tustin</span><span>listed 11mo ago</span><span>OfferUp</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | no model year in title (-0.5) | 5 photos (+0.5) | very short title (-0.5)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_3cb2b72c-1f6e-3eff-91d9-d1f9913b67b0" data-source="OU" data-title="Giant Trance" data-url="https://offerup.com/item/detail/3cb2b72c-1f6e-3eff-91d9-d1f9913b67b0" data-score="4.5" data-recent="1712275200" data-discovered="1778910869" data-fit="fit-unknown" data-search="giant trance rancho santa margarita ou_3cb2b72c-1f6e-3eff-91d9-d1f9913b67b0 ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/3cb2b72c-1f6e-3eff-91d9-d1f9913b67b0" target="_blank" rel="noopener"><img src="https://images.offerup.com/L-LDDi21zA6GHCB_VxLgWQQE-5I=/250x250/31d4/31d44142c0184948b87a0800dc5e70de.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/3cb2b72c-1f6e-3eff-91d9-d1f9913b67b0" target="_blank" rel="noopener">Giant Trance</a></div>
+    <div class="facts"><span class="price">$1999</span><span>Rancho Santa Margarita</span><span>listed 2y ago</span><span>OfferUp</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | no model year in title (-0.5) | 5 photos (+0.5) | very short title (-0.5)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_53383a41-8068-3d95-a143-95a03d2b155e" data-source="OU" data-title="Specialized Stumpjumper ST Comp" data-url="https://offerup.com/item/detail/53383a41-8068-3d95-a143-95a03d2b155e" data-score="4.5" data-recent="1710892800" data-discovered="1778910806" data-fit="fit-ok" data-search="specialized stumpjumper st comp aliso viejo ou_53383a41-8068-3d95-a143-95a03d2b155e ou m new">
+  <a class="thumb" href="https://offerup.com/item/detail/53383a41-8068-3d95-a143-95a03d2b155e" target="_blank" rel="noopener"><img src="https://images.offerup.com/DVwnqI3R6rqSxz1gRQW05695DjI=/250x250/5592/5592b4dfd0034c789e0cc325a04ea7ee.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/53383a41-8068-3d95-a143-95a03d2b155e" target="_blank" rel="noopener">Specialized Stumpjumper ST Comp</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Aliso Viejo</span><span>listed 2y ago</span><span>OfferUp</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_f1aee0e5-132e-38cf-bccb-17cfda10b327" data-source="OU" data-title="Specialized Stumpjumper Comp Carbon" data-url="https://offerup.com/item/detail/f1aee0e5-132e-38cf-bccb-17cfda10b327" data-score="4.5" data-recent="1739577600" data-discovered="1778910806" data-fit="fit-unknown" data-search="specialized stumpjumper comp carbon irvine ou_f1aee0e5-132e-38cf-bccb-17cfda10b327 ou  new">
+  <a class="thumb" href="https://offerup.com/item/detail/f1aee0e5-132e-38cf-bccb-17cfda10b327" target="_blank" rel="noopener"><img src="https://images.offerup.com/rjFBd_j9RImv9wdDpzdPRllK8JQ=/249x249/90c0/90c0c4736f354fa195d0759c8e4bfba9.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/f1aee0e5-132e-38cf-bccb-17cfda10b327" target="_blank" rel="noopener">Specialized Stumpjumper Comp Carbon</a></div>
+    <div class="facts"><span class="price">$2300</span><span>Irvine</span><span>listed 15mo ago</span><span>OfferUp</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_627d30b1-81bb-3321-b657-a4f06ebd5081" data-source="OU" data-title="Cannondale Habit Medium Size" data-url="https://offerup.com/item/detail/627d30b1-81bb-3321-b657-a4f06ebd5081" data-score="4.5" data-recent="1710374400" data-discovered="1778794472" data-fit="fit-ok" data-search="cannondale habit medium size laguna beach ou_627d30b1-81bb-3321-b657-a4f06ebd5081 ou m new">
+  <a class="thumb" href="https://offerup.com/item/detail/627d30b1-81bb-3321-b657-a4f06ebd5081" target="_blank" rel="noopener"><img src="https://images.offerup.com/f4iohUG0Zlcnm0sS3Xfl8r1Oei4=/250x250/4534/4534c929909047a3a1ea36e713418ff4.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-new">New</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/627d30b1-81bb-3321-b657-a4f06ebd5081" target="_blank" rel="noopener">Cannondale Habit Medium Size</a></div>
+    <div class="facts"><span class="price">$1590</span><span>Laguna Beach</span><span>listed 2y ago</span><span>OfferUp</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Cannondale) (+3) | no model year in title (-0.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">first seen 1d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article></div></section><section data-section="review"><div class="section-head"><div><h2>Needs review <span class="count">12</span></h2><div class="section-meta">Deep-review queue, before spending review budget.</div></div></div><div class="grid"><article class="card" data-id="ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-source="OU" data-title="Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB" data-url="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-score="14" data-recent="1762041600" data-discovered="1778910763" data-fit="fit-ok" data-search="turner rfx v4.0, size - m, full suspension carbon enduro mtb lake forest ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778 ou m review">
+  <a class="thumb" href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener"><img src="https://images.offerup.com/kQw4mc9JqBOaQjPA-uEbbZm6iqU=/250x250/fd6d/fd6d58fa13af4740a71035692516bcb7.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener">Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB</a></div>
+    <div class="facts"><span class="price">$2250</span><span>Lake Forest</span><span>listed 6mo ago</span><span class="score ">score 14</span></div>
+    
+    <div class="reasons">premium brand (Turner) (+3) | no model year in title (-0.5) | 9 photos (+1) | premium drivetrain (X01) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4116127" data-source="PB" data-title="2020 Evil Offering, Medium" data-url="https://www.pinkbike.com/buysell/4116127/" data-score="12.5" data-recent="1764288000" data-discovered="1778203579" data-fit="fit-ok" data-search="2020 evil offering, medium ladera ranch 4116127 pb m review">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4116127/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29075298/p3pb29075298.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4116127/" target="_blank" rel="noopener">2020 Evil Offering, Medium</a></div>
+    <div class="facts"><span class="price">$2500 USD</span><span>Ladera Ranch</span><span>listed 6mo ago</span><span class="score ">score 12.5</span></div>
+    <div class="risk"><span>6y old</span></div>
+    <div class="reasons">premium brand (Evil) (+3) | aging (2020, 6y old) (-0.5) | carbon frame (+2) | 14 photos (+1)</div>
+    <div class="card-footer">
+      <span class="seen">queued 0m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4169433" data-source="PB" data-title="2025 Rocky Mountain Altitude A50 Mediumc" data-url="https://www.pinkbike.com/buysell/4169433/" data-score="10.5" data-recent="1776643200" data-discovered="1778376374" data-fit="fit-ok" data-search="2025 rocky mountain altitude a50 mediumc irvine 4169433 pb m review">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4169433/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29590319/p3pb29590319.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4169433/" target="_blank" rel="noopener">2025 Rocky Mountain Altitude A50 Mediumc</a></div>
+    <div class="facts"><span class="price">$2500 USD</span><span>Irvine</span><span>listed 4w ago</span><span class="score warn">score 10.5</span></div>
+    
+    <div class="reasons">premium brand (Rocky Mountain) (+3) | recent model year (2025) (+5) | excellent condition (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4162008" data-source="PB" data-title="2025 Specialized Chisel FS Size Large" data-url="https://www.pinkbike.com/buysell/4162008/" data-score="10.5" data-recent="1776988800" data-discovered="1778030880" data-fit="fit-good" data-search="2025 specialized chisel fs size large laguna niguel 4162008 pb l review">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4162008/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29513425/p3pb29513425.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4162008/" target="_blank" rel="noopener">2025 Specialized Chisel FS Size Large</a></div>
+    <div class="facts"><span class="price">$2250 USD</span><span>Laguna Niguel</span><span>listed 7w ago</span><span class="score warn">score 10.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | recent model year (2025) (+5) | excellent condition (+1) | 7 photos (+0.5)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_f07c1034-1528-3cdc-9d52-c4237cc34598" data-source="OU" data-title="Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB" data-url="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" data-score="10" data-recent="1773446400" data-discovered="1778691985" data-fit="fit-ok" data-search="canyon grand on 7 e-bike, size - m, 2025 full suspension carbon e-mtb dana point ou_f07c1034-1528-3cdc-9d52-c4237cc34598 ou m review">
+  <a class="thumb" href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener"><img src="https://images.offerup.com/ykY7zG3vitk5HZ5DqF4MRyZzQNc=/250x250/5f03/5f03e7fd3b214ad18e3ccb4b5cd9c7d0.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-ok">Medium ok</span>
+      <span class="badge status-user-good" data-user-badge>GOOD</span>
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener">Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB</a></div>
+    <div class="facts"><span class="price">$2550</span><span>Dana Point</span><span>listed 2mo ago</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Canyon) (+3) | recent model year (2025) (+5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">queued 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Requested</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328" data-source="OU" data-title="2022 giant trance 27.5 large frame (price negotiable)" data-url="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" data-score="10" data-recent="1772582400" data-discovered="1778910910" data-fit="fit-good" data-search="2022 giant trance 27.5 large frame (price negotiable) laguna hills ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328 ou l review">
+  <a class="thumb" href="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" target="_blank" rel="noopener"><img src="https://images.offerup.com/dZUor9i045oP80isJhyNE00H7Q4=/250x250/08fe/08fee009831f4eeaaa2ce40df226a741.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" target="_blank" rel="noopener">2022 giant trance 27.5 large frame (price negotiable)</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Laguna Hills</span><span>listed 2mo ago</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | fairly recent (2022) (+2.5) | 12 photos (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_febd8e64-67ec-3616-b7d8-d7ec0dbbc391" data-source="OU" data-title="2025 Giant Trance X3" data-url="https://offerup.com/item/detail/febd8e64-67ec-3616-b7d8-d7ec0dbbc391" data-score="10" data-recent="1772755200" data-discovered="1778910910" data-fit="fit-bad" data-search="2025 giant trance x3 mission viejo ou_febd8e64-67ec-3616-b7d8-d7ec0dbbc391 ou xl review">
+  <a class="thumb" href="https://offerup.com/item/detail/febd8e64-67ec-3616-b7d8-d7ec0dbbc391" target="_blank" rel="noopener"><img src="https://images.offerup.com/6m-i-cZKfbn1GgyQ8Gc0Nty6ICY=/250x250/d874/d874b724d9d4428cadd2171da429161c.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-bad">XL pass</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/febd8e64-67ec-3616-b7d8-d7ec0dbbc391" target="_blank" rel="noopener">2025 Giant Trance X3</a></div>
+    <div class="facts"><span class="price">$1700</span><span>Mission Viejo</span><span>listed 2mo ago</span><span class="score warn">score 10</span></div>
+    <div class="risk"><span>XL fit</span></div>
+    <div class="reasons">premium brand (Giant) (+3) | recent model year (2025) (+5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-source="OU" data-title="Cannondale Jekyll 2 (2022)" data-url="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-score="10" data-recent="1767657600" data-discovered="1778910763" data-fit="fit-good" data-search="cannondale jekyll 2 (2022) newport beach ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8 ou l review">
+  <a class="thumb" href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener"><img src="https://images.offerup.com/Dz-50i2ZFnbhqjFJMHoWdaic86w=/250x250/9362/9362db8efd5f41d1a8a925762acc3bfb.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener">Cannondale Jekyll 2 (2022)</a></div>
+    <div class="facts"><span class="price">$2000</span><span>Newport Beach</span><span>listed 4mo ago</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Cannondale) (+3) | fairly recent (2022) (+2.5) | 5 photos (+0.5) | premium wheels (enve) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4083960" data-source="PB" data-title="2018 Intense Tracer - Pro Build" data-url="https://www.pinkbike.com/buysell/4083960/" data-score="8.5" data-recent="1776384000" data-discovered="1778376374" data-fit="fit-ok" data-search="2018 intense tracer - pro build newport beach 4083960 pb m review">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4083960/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28755749/p3pb28755749.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4083960/" target="_blank" rel="noopener">2018 Intense Tracer - Pro Build</a></div>
+    <div class="facts"><span class="price">$1750 USD</span><span>Newport Beach</span><span>listed 8mo ago</span><span class="score warn">score 8.5</span></div>
+    <div class="risk"><span>8y old</span></div>
+    <div class="reasons">premium brand (Intense) (+3) | older bike (2018, 8y old) (-2) | carbon frame (+2) | excellent condition (+1)</div>
+    <div class="card-footer">
+      <span class="seen">queued 56m ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b" data-source="OU" data-title="2022 Specialized Stumpjumper EVO S2" data-url="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" data-score="12" data-recent="1778544000" data-discovered="1778910855" data-fit="fit-unknown" data-search="2022 specialized stumpjumper evo s2 rancho santa margarita ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b ou  review">
+  <a class="thumb" href="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" target="_blank" rel="noopener"><img src="https://images.offerup.com/la5PzqpNV47m76mj6-_gekLCLR0=/333x250/35a4/35a47b04cddc457f82952c46706d1624.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" target="_blank" rel="noopener">2022 Specialized Stumpjumper EVO S2</a></div>
+    <div class="facts"><span class="price">$2500</span><span>Rancho Santa Margarita</span><span>listed 4d ago</span><span class="score ">score 12</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | premium drivetrain (X01) (+1.5) | premium wheels (industry nine) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">queued 1d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_2c984921-7461-34f3-b73a-3be84c9f54ac" data-source="OU" data-title="Specialized Stumpjumper: L" data-url="https://offerup.com/item/detail/2c984921-7461-34f3-b73a-3be84c9f54ac" data-score="4.5" data-recent="1778716800" data-discovered="1778910855" data-fit="fit-good" data-search="specialized stumpjumper: l lake forest ou_2c984921-7461-34f3-b73a-3be84c9f54ac ou l review">
+  <a class="thumb" href="https://offerup.com/item/detail/2c984921-7461-34f3-b73a-3be84c9f54ac" target="_blank" rel="noopener"><img src="https://images.offerup.com/eQl4HSd00AaeFSRh_zJ4AY_nxwE=/250x250/db2b/db2b683b2c674d5387f9af77406998ca.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/2c984921-7461-34f3-b73a-3be84c9f54ac" target="_blank" rel="noopener">Specialized Stumpjumper: L</a></div>
+    <div class="facts"><span class="price">$1100</span><span>Lake Forest</span><span>listed 2d ago</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">queued 1d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_dc9fa1ae-fa92-3890-87b9-39696dacb4e5" data-source="OU" data-title="Trek Fuel Ex 8" data-url="https://offerup.com/item/detail/dc9fa1ae-fa92-3890-87b9-39696dacb4e5" data-score="4.5" data-recent="1778716800" data-discovered="1778794461" data-fit="fit-unknown" data-search="trek fuel ex 8 anaheim ou_dc9fa1ae-fa92-3890-87b9-39696dacb4e5 ou  review">
+  <a class="thumb" href="https://offerup.com/item/detail/dc9fa1ae-fa92-3890-87b9-39696dacb4e5" target="_blank" rel="noopener"><img src="https://images.offerup.com/-HuavgP-8d9JWb9ZexsPd4a_sAs=/250x250/a093/a09379d77d6d4f6d81e3700b45e0ed6b.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-review">Review</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/dc9fa1ae-fa92-3890-87b9-39696dacb4e5" target="_blank" rel="noopener">Trek Fuel Ex 8</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Anaheim</span><span>listed 2d ago</span><span class="score bad">score 4.5</span></div>
+    
+    <div class="reasons">premium brand (Trek) (+3) | no model year in title (-0.5) | 6 photos (+0.5) | very short title (-0.5)</div>
+    <div class="card-footer">
+      <span class="seen">queued 1d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article></div></section><section data-section="shortlist"><div class="section-head"><div><h2>Active shortlist <span class="count">37</span></h2><div class="section-meta">Pinkbike: socal-60, score &gt;= 8.0, top 10; OfferUp: socal-25, score &gt;= 3.5, top 5; &lt;= $3000, seen &lt;= 14d</div></div></div><div class="grid"><article class="card" data-id="4157611" data-source="PB" data-title="2020 Giant Anthem Advanced PRO 0 - Large" data-url="https://www.pinkbike.com/buysell/4157611/" data-score="14.25" data-recent="1777248000" data-discovered="1777432919" data-fit="fit-good" data-search="2020 giant anthem advanced pro 0 - large san juan capistrano 4157611 pb l pass">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4157611/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29467171/p3pb29467171.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-pass">PASS</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4157611/" target="_blank" rel="noopener">2020 Giant Anthem Advanced PRO 0 - Large</a></div>
+    <div class="facts"><span class="price">$3000 USD</span><span>San Juan Capistrano</span><span>listed 8w ago</span><span>XC / Cross Country Bikes</span><span class="score ">score 14.25</span></div>
+    <div class="risk"><span>6y old</span></div>
+    <div class="reasons">premium brand (Giant) (+3) | aging (2020, 6y old) (-0.5) | carbon frame (+2) | excellent condition (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 6d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-source="OU" data-title="Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB" data-url="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-score="14" data-recent="1762041600" data-discovered="1778522936" data-fit="fit-ok" data-search="turner rfx v4.0, size - m, full suspension carbon enduro mtb lake forest ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778 ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener"><img src="https://images.offerup.com/kQw4mc9JqBOaQjPA-uEbbZm6iqU=/250x250/fd6d/fd6d58fa13af4740a71035692516bcb7.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener">Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB</a></div>
+    <div class="facts"><span class="price">$2250</span><span>Lake Forest</span><span>listed 6mo ago</span><span>OfferUp</span><span class="score ">score 14</span></div>
+    
+    <div class="reasons">premium brand (Turner) (+3) | no model year in title (-0.5) | 9 photos (+1) | premium drivetrain (X01) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4116127" data-source="PB" data-title="2020 Evil Offering, Medium" data-url="https://www.pinkbike.com/buysell/4116127/" data-score="12.5" data-recent="1764288000" data-discovered="1777432365" data-fit="fit-ok" data-search="2020 evil offering, medium ladera ranch 4116127 pb m candidate">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4116127/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29075298/p3pb29075298.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4116127/" target="_blank" rel="noopener">2020 Evil Offering, Medium</a></div>
+    <div class="facts"><span class="price">$2500 USD</span><span>Ladera Ranch</span><span>listed 6mo ago</span><span>Enduro Bikes</span><span class="score ">score 12.5</span></div>
+    <div class="risk"><span>6y old</span></div>
+    <div class="reasons">premium brand (Evil) (+3) | aging (2020, 6y old) (-0.5) | carbon frame (+2) | 14 photos (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 8d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4059695" data-source="PB" data-title="2022 Transition Scout - Medium Carbon GX" data-url="https://www.pinkbike.com/buysell/4059695/" data-score="12.5" data-recent="1776124800" data-discovered="1777432363" data-fit="fit-ok" data-search="2022 transition scout - medium carbon gx san clemente 4059695 pb m pass">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4059695/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28497755/p3pb28497755.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-pass">PASS</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4059695/" target="_blank" rel="noopener">2022 Transition Scout - Medium Carbon GX</a></div>
+    <div class="facts"><span class="price">$2500 USD</span><span>San Clemente</span><span>listed 10mo ago</span><span>Enduro Bikes</span><span class="score ">score 12.5</span></div>
+    
+    <div class="reasons">premium brand (Transition) (+3) | fairly recent (2022) (+1.5) | carbon frame (+2) | 8 photos (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2026-04-29</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b" data-source="OU" data-title="2022 Specialized Stumpjumper EVO S2" data-url="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" data-score="12" data-recent="1778544000" data-discovered="1778691735" data-fit="fit-unknown" data-search="2022 specialized stumpjumper evo s2 rancho santa margarita ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" target="_blank" rel="noopener"><img src="https://images.offerup.com/la5PzqpNV47m76mj6-_gekLCLR0=/333x250/35a4/35a47b04cddc457f82952c46706d1624.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/9b13e006-47ee-3156-a1f7-ecf53719ce1b" target="_blank" rel="noopener">2022 Specialized Stumpjumper EVO S2</a></div>
+    <div class="facts"><span class="price">$2500</span><span>Rancho Santa Margarita</span><span>listed 4d ago</span><span>OfferUp</span><span class="score ">score 12</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | premium drivetrain (X01) (+1.5) | premium wheels (industry nine) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4169433" data-source="PB" data-title="2025 Rocky Mountain Altitude A50 Mediumc" data-url="https://www.pinkbike.com/buysell/4169433/" data-score="10.5" data-recent="1776643200" data-discovered="1777432363" data-fit="fit-ok" data-search="2025 rocky mountain altitude a50 mediumc irvine 4169433 pb m candidate">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4169433/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29590319/p3pb29590319.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4169433/" target="_blank" rel="noopener">2025 Rocky Mountain Altitude A50 Mediumc</a></div>
+    <div class="facts"><span class="price">$2500 USD</span><span>Irvine</span><span>listed 4w ago</span><span>Enduro Bikes</span><span class="score warn">score 10.5</span></div>
+    
+    <div class="reasons">premium brand (Rocky Mountain) (+3) | recent model year (2025) (+5) | excellent condition (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 6d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4162008" data-source="PB" data-title="2025 Specialized Chisel FS Size Large" data-url="https://www.pinkbike.com/buysell/4162008/" data-score="10.5" data-recent="1776988800" data-discovered="1777432919" data-fit="fit-good" data-search="2025 specialized chisel fs size large laguna niguel 4162008 pb l candidate">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4162008/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29513425/p3pb29513425.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4162008/" target="_blank" rel="noopener">2025 Specialized Chisel FS Size Large</a></div>
+    <div class="facts"><span class="price">$2250 USD</span><span>Laguna Niguel</span><span>listed 7w ago</span><span>XC / Cross Country Bikes</span><span class="score warn">score 10.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | recent model year (2025) (+5) | excellent condition (+1) | 7 photos (+0.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 10d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328" data-source="OU" data-title="2022 giant trance 27.5 large frame (price negotiable)" data-url="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" data-score="10" data-recent="1772582400" data-discovered="1778691790" data-fit="fit-good" data-search="2022 giant trance 27.5 large frame (price negotiable) laguna hills ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328 ou l candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" target="_blank" rel="noopener"><img src="https://images.offerup.com/dZUor9i045oP80isJhyNE00H7Q4=/250x250/08fe/08fee009831f4eeaaa2ce40df226a741.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/8058bdcc-6fa1-3d6c-8be4-0805609ed328" target="_blank" rel="noopener">2022 giant trance 27.5 large frame (price negotiable)</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Laguna Hills</span><span>listed 2mo ago</span><span>OfferUp</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | fairly recent (2022) (+2.5) | 12 photos (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-source="OU" data-title="Cannondale Jekyll 2 (2022)" data-url="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-score="10" data-recent="1767657600" data-discovered="1778522936" data-fit="fit-good" data-search="cannondale jekyll 2 (2022) newport beach ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8 ou l candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener"><img src="https://images.offerup.com/Dz-50i2ZFnbhqjFJMHoWdaic86w=/250x250/9362/9362db8efd5f41d1a8a925762acc3bfb.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener">Cannondale Jekyll 2 (2022)</a></div>
+    <div class="facts"><span class="price">$2000</span><span>Newport Beach</span><span>listed 4mo ago</span><span>OfferUp</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Cannondale) (+3) | fairly recent (2022) (+2.5) | 5 photos (+0.5) | premium wheels (enve) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_f07c1034-1528-3cdc-9d52-c4237cc34598" data-source="OU" data-title="Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB" data-url="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" data-score="10" data-recent="1773446400" data-discovered="1778691870" data-fit="fit-ok" data-search="canyon grand on 7 e-bike, size - m, 2025 full suspension carbon e-mtb dana point ou_f07c1034-1528-3cdc-9d52-c4237cc34598 ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener"><img src="https://images.offerup.com/ykY7zG3vitk5HZ5DqF4MRyZzQNc=/250x250/5f03/5f03e7fd3b214ad18e3ccb4b5cd9c7d0.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      <span class="badge status-user-good" data-user-badge>GOOD</span>
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener">Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB</a></div>
+    <div class="facts"><span class="price">$2550</span><span>Dana Point</span><span>listed 2mo ago</span><span>OfferUp</span><span class="score warn">score 10</span></div>
+    
+    <div class="reasons">premium brand (Canyon) (+3) | recent model year (2025) (+5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Requested</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-source="OU" data-title="🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!" data-url="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-score="9.5" data-recent="1720569600" data-discovered="1778691735" data-fit="fit-good" data-search="🚴‍♂️ cannondale habit full suspension mountain bike – like new! costa mesa ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e ou l candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener"><img src="https://images.offerup.com/VxUI1tvGjEPAc8dipCbJptVCKR4=/250x250/bfd2/bfd21405a25541eebfdfcaf2107d69d9.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener">🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Costa Mesa</span><span>listed 22mo ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+    
+    <div class="reasons">premium brand (Cannondale) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | thorough description (1497 chars) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="3964687" data-source="PB" data-title="2023 Trek Procaliber 9.5" data-url="https://www.pinkbike.com/buysell/3964687/" data-score="9.5" data-recent="1744588800" data-discovered="1777432921" data-fit="fit-good" data-search="2023 trek procaliber 9.5 aliso viejo 3964687 pb l candidate">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/3964687/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb27608813/p3pb27608813.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/3964687/" target="_blank" rel="noopener">2023 Trek Procaliber 9.5</a></div>
+    <div class="facts"><span class="price">$1500 USD</span><span>Aliso Viejo</span><span>listed 17mo ago</span><span>XC / Cross Country Bikes</span><span class="score warn">score 9.5</span></div>
+    
+    <div class="reasons">premium brand (Trek) (+3) | fairly recent (2023) (+1.5) | carbon frame (+2) | excellent condition (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2026-04-30</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_1a475bf1-4984-3540-858b-2e4faa12485b" data-source="OU" data-title="2022 YT JEFFSY Core 4 29" data-url="https://offerup.com/item/detail/1a475bf1-4984-3540-858b-2e4faa12485b" data-score="9" data-recent="1747612800" data-discovered="1778522936" data-fit="fit-ok" data-search="2022 yt jeffsy core 4 29 san clemente ou_1a475bf1-4984-3540-858b-2e4faa12485b ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/1a475bf1-4984-3540-858b-2e4faa12485b" target="_blank" rel="noopener"><img src="https://images.offerup.com/i2hff0Y0vXxKSfaV6_hj4PD-rNo=/250x250/ab7c/ab7ca3224ed344a5bc559faa95bc8b63.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/1a475bf1-4984-3540-858b-2e4faa12485b" target="_blank" rel="noopener">2022 YT JEFFSY Core 4 29</a></div>
+    <div class="facts"><span class="price">$2800</span><span>San Clemente</span><span>listed 12mo ago</span><span>OfferUp</span><span class="score warn">score 9</span></div>
+    
+    <div class="reasons">premium brand (Yt) (+3) | fairly recent (2022) (+2.5) | premium suspension (ohlins) (+1.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="4083960" data-source="PB" data-title="2018 Intense Tracer - Pro Build" data-url="https://www.pinkbike.com/buysell/4083960/" data-score="8.5" data-recent="1776384000" data-discovered="1777432363" data-fit="fit-ok" data-search="2018 intense tracer - pro build newport beach 4083960 pb m candidate">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4083960/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28755749/p3pb28755749.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-pb">PB</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4083960/" target="_blank" rel="noopener">2018 Intense Tracer - Pro Build</a></div>
+    <div class="facts"><span class="price">$1750 USD</span><span>Newport Beach</span><span>listed 8mo ago</span><span>Enduro Bikes</span><span class="score warn">score 8.5</span></div>
+    <div class="risk"><span>8y old</span></div>
+    <div class="reasons">premium brand (Intense) (+3) | older bike (2018, 8y old) (-2) | carbon frame (+2) | excellent condition (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 6d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" data-source="OU" data-title="Santa Cruz Hightower Carbon - S Kit - 2019" data-url="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" data-score="8" data-recent="1747526400" data-discovered="1778691735" data-fit="fit-unknown" data-search="santa cruz hightower carbon - s kit - 2019 tustin ou_a2444fd7-49ae-30c1-bd42-5333a4a7d6c0 ou xs candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" target="_blank" rel="noopener"><img src="https://images.offerup.com/KOXH3zRjn5PA6sd9V16104tLev8=/250x250/7912/79127cb53c794b92ba97fd11a4e403b1.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" target="_blank" rel="noopener">Santa Cruz Hightower Carbon - S Kit - 2019</a></div>
+    <div class="facts"><span class="price">$3000</span><span>Tustin</span><span>listed 12mo ago</span><span>OfferUp</span><span class="score warn">score 8</span></div>
+    <div class="risk"><span>7y old</span></div>
+    <div class="reasons">premium brand (Santa Cruz) (+3) | older bike (2019, 7y old) (-2) | 11 photos (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_21125aa1-3e34-366f-9e8e-2e42d7fca356" data-source="OU" data-title="2023 YT Jeffsy Core 3" data-url="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" data-score="8" data-recent="1725408000" data-discovered="1778522936" data-fit="fit-unknown" data-search="2023 yt jeffsy core 3 mission viejo ou_21125aa1-3e34-366f-9e8e-2e42d7fca356 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" target="_blank" rel="noopener"><img src="https://images.offerup.com/ldhTAeJ5LFG3c2c0xUylry2H1Yc=/250x250/ca3d/ca3d684c9b414541a24aa11d0873afbb.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" target="_blank" rel="noopener">2023 YT Jeffsy Core 3</a></div>
+    <div class="facts"><span class="price">$2800</span><span>Mission Viejo</span><span>listed 21mo ago</span><span>OfferUp</span><span class="score warn">score 8</span></div>
+    
+    <div class="reasons">premium brand (Yt) (+3) | fairly recent (2023) (+2.5) | 6 photos (+0.5) | at corpus median (corpus median $2400 across 3 listings, listing 116%) (+0)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_6209f070-46c7-30f6-b053-c2fa6e632bf6" data-source="OU" data-title="2024 Santa Cruz High Tower Cr" data-url="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" data-score="8" data-recent="1752278400" data-discovered="1778690331" data-fit="fit-unknown" data-search="2024 santa cruz high tower cr san clemente ou_6209f070-46c7-30f6-b053-c2fa6e632bf6 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener"><img src="https://images.offerup.com/XptN-iT3MxCq3mdUTMGVrFd632A=/250x250/5442/544289f3800148e2ba67fbddae71cefe.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener">2024 Santa Cruz High Tower Cr</a></div>
+    <div class="facts"><span class="price">$3000</span><span>San Clemente</span><span>listed 10mo ago</span><span>OfferUp</span><span class="score warn">score 8</span></div>
+    
+    <div class="reasons">premium brand (Santa Cruz) (+3) | recent model year (2024) (+5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_163dd107-96e4-35d6-9683-db18cc0aa2db" data-source="OU" data-title="Trek Fuel Ex Project One Factory Racing-$1500 OBO" data-url="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" data-score="7.5" data-recent="1757721600" data-discovered="1778691735" data-fit="fit-unknown" data-search="trek fuel ex project one factory racing-$1500 obo irvine ou_163dd107-96e4-35d6-9683-db18cc0aa2db ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" target="_blank" rel="noopener"><img src="https://images.offerup.com/9DmkhdPoiZ2i5EXjJpkRe-fykGs=/250x250/4872/48727b94f12a4b63b7b32cf6895e7c16.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" target="_blank" rel="noopener">Trek Fuel Ex Project One Factory Racing-$1500 OBO</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Irvine</span><span>listed 8mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    
+    <div class="reasons">premium brand (Trek) (+3) | no model year in title (-0.5) | midrange drivetrain (XT) (+0.5) | premium suspension (kashima) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_982727c9-d582-309a-bbce-4a3986aa4dca" data-source="OU" data-title="2022 Alloy Stunt Jumper" data-url="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" data-score="7.5" data-recent="1731628800" data-discovered="1778522936" data-fit="fit-unknown" data-search="2022 alloy stunt jumper mission viejo ou_982727c9-d582-309a-bbce-4a3986aa4dca ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" target="_blank" rel="noopener"><img src="https://images.offerup.com/WRyrzgN3IVS2TTCu27RXboMqrcM=/250x250/6fa0/6fa0fbf02008443184931d2570e63e38.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" target="_blank" rel="noopener">2022 Alloy Stunt Jumper</a></div>
+    <div class="facts"><span class="price">$1250</span><span>Mission Viejo</span><span>listed 18mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_626a19d4-303e-3cc4-b4aa-80392d1e77f7" data-source="OU" data-title="2022 YT Jeffsy Core 2 Size Medium" data-url="https://offerup.com/item/detail/626a19d4-303e-3cc4-b4aa-80392d1e77f7" data-score="7.5" data-recent="1775260800" data-discovered="1778691790" data-fit="fit-ok" data-search="2022 yt jeffsy core 2 size medium lake forest ou_626a19d4-303e-3cc4-b4aa-80392d1e77f7 ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/626a19d4-303e-3cc4-b4aa-80392d1e77f7" target="_blank" rel="noopener"><img src="https://images.offerup.com/YDqSFpdQ2id_drG945MYicyhoJg=/250x250/8974/89745c1aafd84c2b99358e9c1a5dd192.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/626a19d4-303e-3cc4-b4aa-80392d1e77f7" target="_blank" rel="noopener">2022 YT Jeffsy Core 2 Size Medium</a></div>
+    <div class="facts"><span class="price">$2200</span><span>Lake Forest</span><span>listed 6w ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    
+    <div class="reasons">premium brand (Yt) (+3) | fairly recent (2022) (+2.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_72786fbb-cd7a-32ae-8d82-10f5d4a94a4b" data-source="OU" data-title="CARBON 2022 YT Izzo Blaze 29er MTB Size MEDIUM" data-url="https://offerup.com/item/detail/72786fbb-cd7a-32ae-8d82-10f5d4a94a4b" data-score="7.5" data-recent="1778630400" data-discovered="1778690949" data-fit="fit-ok" data-search="carbon 2022 yt izzo blaze 29er mtb size medium mission viejo ou_72786fbb-cd7a-32ae-8d82-10f5d4a94a4b ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/72786fbb-cd7a-32ae-8d82-10f5d4a94a4b" target="_blank" rel="noopener"><img src="https://images.offerup.com/3bgX17avHCl_tNiLfFx3_eEvqYk=/333x250/f75b/f75b7f7e66fa411995d127d434c70eac.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/72786fbb-cd7a-32ae-8d82-10f5d4a94a4b" target="_blank" rel="noopener">CARBON 2022 YT Izzo Blaze 29er MTB Size MEDIUM</a></div>
+    <div class="facts"><span class="price">$2700</span><span>Mission Viejo</span><span>listed 3d ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    
+    <div class="reasons">premium brand (Yt) (+3) | fairly recent (2022) (+2.5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_3f92362b-0bf1-3526-8ac7-a09134f8a390" data-source="OU" data-title="2023 Giant E-bike ( Medium)" data-url="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" data-score="7.5" data-recent="1737676800" data-discovered="1778690331" data-fit="fit-ok" data-search="2023 giant e-bike ( medium) san clemente ou_3f92362b-0bf1-3526-8ac7-a09134f8a390 ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" target="_blank" rel="noopener"><img src="https://images.offerup.com/KCYz0hVMdN1thL_4hAbRNUIMU5g=/250x250/5b2c/5b2c39e3576c4bdd8d9745afae4dac36.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" target="_blank" rel="noopener">2023 Giant E-bike ( Medium)</a></div>
+    <div class="facts"><span class="price">$2900</span><span>San Clemente</span><span>listed 16mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | fairly recent (2023) (+2.5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327" data-source="OU" data-title="Yt Jeffsy Core 3 2023" data-url="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" data-score="7.5" data-recent="1762732800" data-discovered="1778690331" data-fit="fit-unknown" data-search="yt jeffsy core 3 2023 ladera ranch ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" target="_blank" rel="noopener"><img src="https://images.offerup.com/kUyTnvGQaGSszzVthUwVq1-RRBA=/250x250/f6a6/f6a63e7842de426a82a7867fd0c3d4a4.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" target="_blank" rel="noopener">Yt Jeffsy Core 3 2023</a></div>
+    <div class="facts"><span class="price">$2400</span><span>Ladera Ranch</span><span>listed 6mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+    <div class="risk"><span>crashed</span></div>
+    <div class="reasons">premium brand (Yt) (+3) | fairly recent (2023) (+2.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 2d ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" data-source="OU" data-title="Mtb Gian Trance 27.5” Maestro Up Grade" data-url="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" data-score="7" data-recent="1774742400" data-discovered="1778691870" data-fit="fit-unknown" data-search="mtb gian trance 27.5” maestro up grade aliso viejo ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" target="_blank" rel="noopener"><img src="https://images.offerup.com/HusCushCfMY40_tIaiye7JuSsNY=/250x250/912e/912e13a158e74fdd8764b2ce7160a5cf.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" target="_blank" rel="noopener">Mtb Gian Trance 27.5” Maestro Up Grade</a></div>
+    <div class="facts"><span class="price">$1850</span><span>Aliso Viejo</span><span>listed 7w ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+    
+    <div class="reasons">premium brand (Giant) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | detailed description (530 chars) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_419cf1e7-abcf-3176-8e76-57e9018e5ea8" data-source="OU" data-title="Specialized S-Works Stumpjumper FSR — Carbon Full Suspension MTB" data-url="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" data-score="7" data-recent="1773878400" data-discovered="1778691735" data-fit="fit-ok" data-search="specialized s-works stumpjumper fsr — carbon full suspension mtb newport beach ou_419cf1e7-abcf-3176-8e76-57e9018e5ea8 ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" target="_blank" rel="noopener"><img src="https://images.offerup.com/517A49em6npPYeQAaxvZzt6z-ww=/250x250/6b9f/6b9ffe7d483747b9ad24b10f3a973533.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" target="_blank" rel="noopener">Specialized S-Works Stumpjumper FSR — Carbon Full Suspension MTB</a></div>
+    <div class="facts"><span class="price">$1200</span><span>Newport Beach</span><span>listed 8w ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | detailed description (860 chars) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_5fd16c6c-dcc4-3435-8d5b-6c6ade58e452" data-source="OU" data-title="2021 Specialized Stumpjumper Alloy Comp S6 Mountain Bike" data-url="https://offerup.com/item/detail/5fd16c6c-dcc4-3435-8d5b-6c6ade58e452" data-score="7" data-recent="1686355200" data-discovered="1778691735" data-fit="fit-unknown" data-search="2021 specialized stumpjumper alloy comp s6 mountain bike irvine ou_5fd16c6c-dcc4-3435-8d5b-6c6ade58e452 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/5fd16c6c-dcc4-3435-8d5b-6c6ade58e452" target="_blank" rel="noopener"><img src="https://images.offerup.com/_I1OikpZKgYkubllubj8-KFhr80=/249x249/9caf/9cafb57e95114729ab7159939025144d.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/5fd16c6c-dcc4-3435-8d5b-6c6ade58e452" target="_blank" rel="noopener">2021 Specialized Stumpjumper Alloy Comp S6 Mountain Bike</a></div>
+    <div class="facts"><span class="price">$2100</span><span>Irvine</span><span>listed 3y ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+    <div class="risk"><span>5y old</span></div>
+    <div class="reasons">premium brand (Specialized) (+3) | aging (2021, 5y old) (-0.5) | 9 photos (+1) | thorough description (2975 chars) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_723da482-b534-3276-9447-7064f834a0fa" data-source="OU" data-title="Pivot MACH 6 Mountain Bike" data-url="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" data-score="7" data-recent="1749081600" data-discovered="1778522936" data-fit="fit-ok" data-search="pivot mach 6 mountain bike laguna beach ou_723da482-b534-3276-9447-7064f834a0fa ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" target="_blank" rel="noopener"><img src="https://images.offerup.com/KNJBmJuXI9uGn5HY03tF94vO4kY=/250x250/602c/602c49eb6bba410b8dd68961e3846f51.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" target="_blank" rel="noopener">Pivot MACH 6 Mountain Bike</a></div>
+    <div class="facts"><span class="price">$3000</span><span>Laguna Beach</span><span>listed 12mo ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+    
+    <div class="reasons">premium brand (Pivot) (+3) | no model year in title (-0.5) | premium suspension (fox factory) (+1.5) | detailed description (714 chars) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_28b94fa0-397c-312f-a9af-bce3726bf59c" data-source="OU" data-title="Santa Cruz Bronson Mountain Bike" data-url="https://offerup.com/item/detail/28b94fa0-397c-312f-a9af-bce3726bf59c" data-score="6.5" data-recent="1769385600" data-discovered="1778522936" data-fit="fit-good" data-search="santa cruz bronson mountain bike irvine ou_28b94fa0-397c-312f-a9af-bce3726bf59c ou l candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/28b94fa0-397c-312f-a9af-bce3726bf59c" target="_blank" rel="noopener"><img src="https://images.offerup.com/JDbKIFSjauyJKav6w8LEpx-dop4=/250x250/2321/23218244c83d4f479f785bf124b84d86.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/28b94fa0-397c-312f-a9af-bce3726bf59c" target="_blank" rel="noopener">Santa Cruz Bronson Mountain Bike</a></div>
+    <div class="facts"><span class="price">$2900</span><span>Irvine</span><span>listed 4mo ago</span><span>OfferUp</span><span class="score bad">score 6.5</span></div>
+    
+    <div class="reasons">premium brand (Santa Cruz) (+3) | no model year in title (-0.5) | service history (new chain) (+1) | detailed description (753 chars) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_d2d2cbf3-0995-3f6d-8a56-51a4e5dd426b" data-source="OU" data-title="Ibis Ripmo AF Medium" data-url="https://offerup.com/item/detail/d2d2cbf3-0995-3f6d-8a56-51a4e5dd426b" data-score="6.5" data-recent="1672790400" data-discovered="1778522936" data-fit="fit-ok" data-search="ibis ripmo af medium newport beach ou_d2d2cbf3-0995-3f6d-8a56-51a4e5dd426b ou m candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/d2d2cbf3-0995-3f6d-8a56-51a4e5dd426b" target="_blank" rel="noopener"><img src="https://images.offerup.com/PZLef_XiqGxQrd8RiA-xhsrmSO4=/250x250/f24b/f24bd04ea23e4745a9a57ab24894b0f0.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-ok">Medium ok</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/d2d2cbf3-0995-3f6d-8a56-51a4e5dd426b" target="_blank" rel="noopener">Ibis Ripmo AF Medium</a></div>
+    <div class="facts"><span class="price">$2900</span><span>Newport Beach</span><span>listed 3y ago</span><span>OfferUp</span><span class="score bad">score 6.5</span></div>
+    
+    <div class="reasons">premium brand (Ibis) (+3) | no model year in title (-0.5) | premium wheels (carbon rim) (+1) | service history (new chain) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_fe4ead58-d977-35a3-8d11-e816b40c9a75" data-source="OU" data-title="Specialized Stumpjumper Expert 29er - Small" data-url="https://offerup.com/item/detail/fe4ead58-d977-35a3-8d11-e816b40c9a75" data-score="6" data-recent="1773187200" data-discovered="1778691735" data-fit="fit-bad" data-search="specialized stumpjumper expert 29er - small costa mesa ou_fe4ead58-d977-35a3-8d11-e816b40c9a75 ou s candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/fe4ead58-d977-35a3-8d11-e816b40c9a75" target="_blank" rel="noopener"><img src="https://images.offerup.com/CQqRMdeef0aPJG4N_HEePL_LnTs=/250x250/35ca/35cae14204204f07bb79eceea65346b8.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-bad">Small</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/fe4ead58-d977-35a3-8d11-e816b40c9a75" target="_blank" rel="noopener">Specialized Stumpjumper Expert 29er - Small</a></div>
+    <div class="facts"><span class="price">$2500</span><span>Costa Mesa</span><span>listed 2mo ago</span><span>OfferUp</span><span class="score bad">score 6</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | midrange drivetrain (GX EAGLE) (+0.5) | premium wheels (carbon wheel) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_ebd86f11-12a5-383a-b4a0-3558bf090137" data-source="OU" data-title="Specialized Enduro Small" data-url="https://offerup.com/item/detail/ebd86f11-12a5-383a-b4a0-3558bf090137" data-score="6" data-recent="1717545600" data-discovered="1778691735" data-fit="fit-bad" data-search="specialized enduro small costa mesa ou_ebd86f11-12a5-383a-b4a0-3558bf090137 ou s candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/ebd86f11-12a5-383a-b4a0-3558bf090137" target="_blank" rel="noopener"><img src="https://images.offerup.com/jJcQkNCVAaEfdZJznYogzebNCJs=/250x250/ab5c/ab5c67ef4ad04c778724e221a381cb97.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-bad">Small</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/ebd86f11-12a5-383a-b4a0-3558bf090137" target="_blank" rel="noopener">Specialized Enduro Small</a></div>
+    <div class="facts"><span class="price">$990</span><span>Costa Mesa</span><span>listed 2y ago</span><span>OfferUp</span><span class="score bad">score 6</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | 9 photos (+1) | premium drivetrain (XTR) (+1.5)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_ef5222cc-3724-352c-847d-56e87c169b10" data-source="OU" data-title="Intense Recluse Elite Mountain Bike" data-url="https://offerup.com/item/detail/ef5222cc-3724-352c-847d-56e87c169b10" data-score="6" data-recent="1623974400" data-discovered="1778522936" data-fit="fit-unknown" data-search="intense recluse elite mountain bike laguna niguel ou_ef5222cc-3724-352c-847d-56e87c169b10 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/ef5222cc-3724-352c-847d-56e87c169b10" target="_blank" rel="noopener"><img src="https://images.offerup.com/MJdbay_fCHaDfgKcZTg6l6wfUuo=/250x250/716f/716f4a6307ff4e8a865a356ab3825c95.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/ef5222cc-3724-352c-847d-56e87c169b10" target="_blank" rel="noopener">Intense Recluse Elite Mountain Bike</a></div>
+    <div class="facts"><span class="price">$2900</span><span>Laguna Niguel</span><span>listed 5y ago</span><span>OfferUp</span><span class="score bad">score 6</span></div>
+    
+    <div class="reasons">premium brand (Intense) (+3) | no model year in title (-0.5) | 7 photos (+0.5) | premium wheels (carbon rim) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_b4ebc2b7-685f-3696-8c3b-7e07c0a5657c" data-source="OU" data-title="Intense Carbine Mountain Bike" data-url="https://offerup.com/item/detail/b4ebc2b7-685f-3696-8c3b-7e07c0a5657c" data-score="6" data-recent="1761955200" data-discovered="1778522936" data-fit="fit-unknown" data-search="intense carbine mountain bike aliso viejo ou_b4ebc2b7-685f-3696-8c3b-7e07c0a5657c ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/b4ebc2b7-685f-3696-8c3b-7e07c0a5657c" target="_blank" rel="noopener"><img src="https://images.offerup.com/6QIxcpcc8JsLsnsjUXXta-y9Bsk=/250x250/e4f2/e4f21da6c89b453daf1fb1e2e5a55bf0.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/b4ebc2b7-685f-3696-8c3b-7e07c0a5657c" target="_blank" rel="noopener">Intense Carbine Mountain Bike</a></div>
+    <div class="facts"><span class="price">$1000</span><span>Aliso Viejo</span><span>listed 7mo ago</span><span>OfferUp</span><span class="score bad">score 6</span></div>
+    
+    <div class="reasons">premium brand (Intense) (+3) | no model year in title (-0.5) | 5 photos (+0.5) | service history (tune up) (+1)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_b2e13411-27f5-3157-9bbd-7e77cfb3ddbc" data-source="OU" data-title="Specialized Stumpjumper Size Small" data-url="https://offerup.com/item/detail/b2e13411-27f5-3157-9bbd-7e77cfb3ddbc" data-score="5.5" data-recent="1769644800" data-discovered="1778690331" data-fit="fit-bad" data-search="specialized stumpjumper size small laguna niguel ou_b2e13411-27f5-3157-9bbd-7e77cfb3ddbc ou s candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/b2e13411-27f5-3157-9bbd-7e77cfb3ddbc" target="_blank" rel="noopener"><img src="https://images.offerup.com/tXV24Y9XX7d3Ha9EEeI85jUQlU0=/250x250/3b74/3b74499b46f0465c89e6fa4af02ddfab.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-bad">Small</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/b2e13411-27f5-3157-9bbd-7e77cfb3ddbc" target="_blank" rel="noopener">Specialized Stumpjumper Size Small</a></div>
+    <div class="facts"><span class="price">$1200</span><span>Laguna Niguel</span><span>listed 4mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | service history (just serviced) (+1) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_188b516e-3205-3f7c-90a6-a4d19c7a9807" data-source="OU" data-title="Enduro Specialized Expert Mountain Bike" data-url="https://offerup.com/item/detail/188b516e-3205-3f7c-90a6-a4d19c7a9807" data-score="5.5" data-recent="1733875200" data-discovered="1778522936" data-fit="fit-unknown" data-search="enduro specialized expert mountain bike laguna hills ou_188b516e-3205-3f7c-90a6-a4d19c7a9807 ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/188b516e-3205-3f7c-90a6-a4d19c7a9807" target="_blank" rel="noopener"><img src="https://images.offerup.com/jyNrh-QzlvYLtfiO9JFjbPovOgw=/250x250/1ba9/1ba9111cea8f46468a1dede71d7b127e.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/188b516e-3205-3f7c-90a6-a4d19c7a9807" target="_blank" rel="noopener">Enduro Specialized Expert Mountain Bike</a></div>
+    <div class="facts"><span class="price">$1500</span><span>Laguna Hills</span><span>listed 17mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | service history (new chain) (+1) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_adc85c67-f561-30d6-a9bd-331cb3f77dba" data-source="OU" data-title="YT Capra Mountain Bike" data-url="https://offerup.com/item/detail/adc85c67-f561-30d6-a9bd-331cb3f77dba" data-score="5.5" data-recent="1771718400" data-discovered="1778522936" data-fit="fit-good" data-search="yt capra mountain bike lake forest ou_adc85c67-f561-30d6-a9bd-331cb3f77dba ou l candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/adc85c67-f561-30d6-a9bd-331cb3f77dba" target="_blank" rel="noopener"><img src="https://images.offerup.com/W2cB873lHcxGD6E06B7_B5irHf0=/250x250/3946/39460ec179dd4e7e908a3656e89db180.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-good">Large fit</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/adc85c67-f561-30d6-a9bd-331cb3f77dba" target="_blank" rel="noopener">YT Capra Mountain Bike</a></div>
+    <div class="facts"><span class="price">$1800</span><span>Lake Forest</span><span>listed 3mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Yt) (+3) | no model year in title (-0.5) | premium wheels (dt swiss) (+1) | OfferUp complete-bike relevance (named model) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_6da4a570-a2bd-3485-bd92-67d0b14d289f" data-source="OU" data-title="Specialized Full Suspension Mountain Bike" data-url="https://offerup.com/item/detail/6da4a570-a2bd-3485-bd92-67d0b14d289f" data-score="5.5" data-recent="1753920000" data-discovered="1778522936" data-fit="fit-unknown" data-search="specialized full suspension mountain bike irvine ou_6da4a570-a2bd-3485-bd92-67d0b14d289f ou  candidate">
+  <a class="thumb" href="https://offerup.com/item/detail/6da4a570-a2bd-3485-bd92-67d0b14d289f" target="_blank" rel="noopener"><img src="https://images.offerup.com/ObhMY3YMIAvgMskS_x468oWWEV8=/250x250/56fa/56fad6c365a44ccd8cf4cbb2d813d6f4.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="topline">
+      <span class="badge source-ou">OU</span>
+      <span class="badge status-candidate">Candidate</span>
+      <span class="badge fit-unknown">Size unknown</span>
+      
+    </div>
+    <div class="title"><a href="https://offerup.com/item/detail/6da4a570-a2bd-3485-bd92-67d0b14d289f" target="_blank" rel="noopener">Specialized Full Suspension Mountain Bike</a></div>
+    <div class="facts"><span class="price">$2000</span><span>Irvine</span><span>listed 10mo ago</span><span>OfferUp</span><span class="score bad">score 5.5</span></div>
+    
+    <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | detailed description (739 chars) (+1) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+    <div class="card-footer">
+      <span class="seen">seen 1h ago</span>
+      <span class="actions">
+        <button class="action" type="button" data-open-review>Add review</button>
+        <button class="action" type="button" data-open-note>Note</button>
+      </span>
+    </div>
+  </div>
+</article></div></section>
+  </main>
+</div>
+<div class="modal-backdrop" data-modal hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h2 class="modal-title" id="modal-title"></h2>
+      <button type="button" data-close-modal>Close</button>
+    </div>
+    <div class="modal-body" data-modal-body></div>
+  </div>
+</div>
+<script>
+(() => {
+  const reviewData = {"4159566": {"verdict": "WATCH", "review_rel": "reviews/4159566-2020-pivot-firebird-2026-04-28.md", "summary": {"logic": "This is a real all-premium 2020 Race X01 build (MSRP ~$5,999 per Mountain Bike Picker's 2020 spec table) at $2,900 asking — 48% of MSRP on a 6-year-old enduro, dropping to ~42% effective after the user's typical $375 lowball. Owner-disclosed flaws (rear shock due for routine rebuild, carbon crank cosmetic chip, BB-area frame wear) are honest and consistent with the X2 squelch issue widely reported in forums (singletrackworld, MBR), so the disclosure is cr...", "watch_trigger": "drive over to inspect within the next week. If", "buyer_ceiling": "$1,800 — won't pay above", "probable_clear": "~$2,300.", "flip_verdict": "thin. Best case is ~$195 over 3–8 weeks of carry."}}, "4171195": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4069076": {"verdict": "PASS", "review_rel": "reviews/4069076-2022-ibis-ripmo-2026-04-30.md", "summary": {"logic": "The bike is genuinely well-spec'd and well-maintained — GX AXS wireless, Fox Factory 36 (converted to 170mm) and Float X2 Factory both Kashima, Industry Nine stem, BikeYoke Revive Max dropper, and fresh brakes on a ridewrapped carbon Ripmo V2 frame. But two structural problems: (1) the frame is XL, which is a dealbreaker per the user's size preference — the L/M resale pool in SoCal is several times deeper than XL, and (2) even at the right size, $2,650 as...", "watch_trigger": "", "buyer_ceiling": "$1,800 — 68% of ask. The seller is", "probable_clear": "$2,250 — XL clears 10–15% below L/M of the", "flip_verdict": "thin and slow. Expected $200 over 6–10 weeks is"}}, "3917477": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4165883": {"verdict": "WATCH", "review_rel": "reviews/4165883-2024-mondraker-foxy-r-2026-04-30.md", "summary": {"logic": "The bike checks the right boxes — 2024 carbon enduro, Large frame (matches size preference), 17 photos, 1156-char description, near-zero miles on the wheels/cassette/tires (genuine demo-bike pattern). Asking $2,000 is roughly 31% of the 2024 €5,999 MSRP — a steeper discount than a 2-year-old carbon enduro should clear at, which is the \"investigate hard\" tier from msrp-discount-math. Two reasons not to BUY at ask: (1) the user explicitly named $1,800 as th...", "watch_trigger": "**BUY at $1,800 cash, immediate pickup. PASS if", "buyer_ceiling": "$1,800 — the user's stated target, ratified", "probable_clear": "$2,100 — NX/GX/G2R spec caps the ceiling;", "flip_verdict": "thin-to-acceptable. Expected $110 profit over 4–6"}}, "4110109": {"verdict": "PASS", "review_rel": null, "summary": {}}, "3942688": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4055864": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4106094": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4101457": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4098660": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4097387": {"verdict": "WATCH", "review_rel": "reviews/4097387-2024-yt-capra-2026-05-06.md", "summary": {"logic": "The bike itself is excellent — BikeRadar's 2024 Enduro Bike of the Year, mechanic-owned with monthly service, and built well beyond stock spec with a coil Fox DHX2, Grip X2 fork internals, XX1 AXS, and TRP Evo Pro Gold brakes. The problem is purely pricing: $3,000 is the highest comp in the entire corpus for this model, and the market has already voted by leaving it unsold for 7+ months. The seller reposted in March 2026 without a visible price drop, sign...", "watch_trigger": "", "buyer_ceiling": "$2,500 — the most to pay; $2,500 is the corpus median for the model line across all trims, and the upgraded spec doesn't reliably translate to dollar-for-dollar resale recovery.", "probable_clear": "$2,800–$3,000 — the market has already demonstrated resistance at $3,000 for 7 months; expect next buyer's lowball to land it near $2,900. FB Marketplace locally: $2,600–$2,800.", "flip_verdict": "Thin at buyer ceiling of $2,500. $300 expected profit over 3–6 weeks is marginal — one unexpected service bill eliminates it. If acquisition comes in at $2,200–$2,300, expected pr..."}}, "4032891": {"verdict": "PASS", "review_rel": "reviews/4032891-2024-santa-cruz-tallboy-2026-04-30.md", "summary": {"logic": "The title says \"2024 Santa Cruz Tallboy D,\" but Santa Cruz's published 2024 Tallboy lineup is carbon-only — R, S, X0 AXS, X0 AXS RSV, XX SL AXS RSV, XX AXS RSV. The D alloy trim was the entry-level 2022-and-earlier configuration. Most likely this is a 2022 Tallboy D Aluminum mislabeled as a 2024, which the never-confabulate principle says defaults to PASS or WATCH on its own. Pricing kills it the rest of the way: $2,300 ask is ~82% of the 2022 D's ~$2,800...", "watch_trigger": "", "buyer_ceiling": "~$1,400 (60% of ask, applying the aged-listing rule from feedback_resale_calibration.md).", "probable_clear": "$1,400–$1,600. The Tallboy D Aluminum is the entry-level orphan of the line — buyers wanting a Santa Cruz Tallboy step up to carbon (R/S minimum); buyers wanting alloy 130/120 tra...", "flip_verdict": "negative-to-thin at best, *and* it requires a buy that the seller has shown no willingness to entertain across 11 months. The expected-case margin is zero. The dollar profit at ex..."}}, "4059695": {"verdict": "PASS", "review_rel": "reviews/4059695-2022-transition-scout-2026-05-06.md", "summary": {"logic": "Pricing anchors are nearly absent — no BBB match and the broad corpus query returns only this listing itself, so there's no independent floor to evaluate the ask against. The 27.5\" wheel format and GX Eagle drivetrain both cap the resale pool and premium story in SoCal, where buyers strongly favor 29\" enduro builds. At $2,500 OBO, even landing acquisition at $2,100–$2,200 leaves an expected flip profit of $0–$200 after costs — the margin is too thin to ju...", "watch_trigger": "", "buyer_ceiling": "$2,100 — absolute maximum given no floor anchor and 27.5\" format discount.", "probable_clear": "$2,200–$2,400 — buyers of 27.5\" trail bikes shop price-sensitively; expect lowball to land near $2,300. No closed-deal data in corpus; this estimate is speculative.", "flip_verdict": "Negative to thin. Expected profit of $100 across 4–8 weeks is not worth deploying capital. Even the best-case scenario ($400) requires the next buyer to pay near asking price on a..."}}, "4060500": {"verdict": "PASS", "review_rel": "reviews/4060500-2020-norco-sight-2026-05-06.md", "summary": {"logic": "At 6 years old, the expected clear for a bike of this class is 35–40% of MSRP (~$1,750–$2,000 against a ~$5,000 comparable complete), yet the seller is asking $3,000 — 60% of MSRP and well above where the depreciation curve puts 6-year-old enduro bikes. The drivetrain is a mismatched assembly (X01 derailleur, GX cassette, GX shifter, XX1 chain) that the scraper scored as X01 but is effectively GX-grade performance; this overstates the spec significantly....", "watch_trigger": "", "buyer_ceiling": "$2,100 — anchored against the 35–40% MSRP clear band. Above $2,100 the flip economics are negative.", "probable_clear": "$2,000–$2,300 — the 6-year depreciation curve is real; buyers will apply their own lowball. SoCal local: $1,800–$2,100.", "flip_verdict": "Negative. Even at buyer ceiling of $2,100, the expected clear produces a loss. The best-case scenario requires the next buyer to pay at the high end of what a 6-year-old bike shou..."}}, "4086360": {"verdict": "PASS", "review_rel": "reviews/4086360-2020-ibis-mojo-hd4-2026-05-06.md", "summary": {"logic": "Asking price of $2,050 is already at the top edge of what a 6-year-old 27.5\" trail/enduro bike realistically clears for — the depreciation curve puts the clear band at ~$1,750–$2,050 (35–40% of ~$5,000 MSRP), meaning the seller is asking at the floor. The \"no lowballing please\" language explicitly closes acquisition room below that. At any likely acquisition price (~$1,900), the user would need the next buyer to pay full asking price to break even on the...", "watch_trigger": "", "buyer_ceiling": "$1,900 — the most to pay if resale numbers are to work at all; even this is marginal.", "probable_clear": "$1,900–$2,100 — the 6-year depreciation curve and 27.5\" format both cap the next buyer's willingness. The corpus for this model is empty; the estimate is based on the depreciation...", "flip_verdict": "Negative to break-even. The expected clear matches the cost basis — zero profit. Best-case $300 requires favorable conditions (right buyer, May peak season). This is not a workabl..."}}, "4081587": {"verdict": "WATCH", "review_rel": "reviews/4081587-2020-rocky-mountain-instinct-bc-2026-05-06.md", "summary": {"logic": "The Instinct BC Edition is a genuinely unique bike (high-pivot with idler pulley, distinct kinematics) with a dedicated buyer pool, sold by a powerseller with 25 photos and a fresh April 27 repost — timing aligns with peak May season. Stock MSRP was $7,199; asking $2,550 is 35.4% of that — right at the floor of the 35–40% depreciation band for 6-year-old bikes, meaning there's no pricing gift but also no overpricing. The stock X01 drivetrain has been repl...", "watch_trigger": "", "buyer_ceiling": "$2,300 — the point below which the flip margin becomes workable at expected clear.", "probable_clear": "$2,700–$2,900 — the BC Edition buyer is typically a knowledgeable rider who has done the research; they'll lowball but not to GX-trail-bike levels. Corpus is empty so this estimat...", "flip_verdict": "Acceptable in the May window. $350 expected profit over 3–5 weeks is marginal but positive, and the BC Edition's dedicated buyer pool reduces the risk of a slow clear relative to..."}}, "4167499": {"verdict": "PASS", "review_rel": "reviews/4167499-2025-intense-sniper-xc-2026-05-06.md", "summary": {"logic": "This is a mid-spec XC bike (SLX 12-speed, e-thirteen XC wheels, Fox 32 / Fox Performance Elite Float) priced at 71% of its $3,999 MSRP — normal depreciation for a nearly-new bike, not a discount. The scraper's score of 17.5 is inflated by the 2025-model-year bonus (+5), which rewards recency but doesn't change the flip economics: at 71% of MSRP, there is no room for the user to acquire below the next buyer's lowball threshold. The XC buyer pool in SoCal i...", "watch_trigger": "", "buyer_ceiling": "$2,500 — the most to pay if any flip margin is to exist at all.", "probable_clear": "$2,700–$2,900 — XC buyers shop carefully and price-compare against new dealer stock. At $2,850+ asking on a used bike, they may just buy new.", "flip_verdict": "Thin to negative. The expected $200 profit requires (a) acquiring at $2,500 — unlikely from a fresh powerseller listing — and (b) the next buyer paying above current asking price...."}}, "4167573": {"verdict": "WATCH", "review_rel": "reviews/4167573-2020-giant-reign-2026-05-06.md", "summary": {"logic": "Refreshed from 2026-04-30 review — no material change in listing status (same $2,550 price, same powerseller, still active). The core tension is unchanged: Fox 36 Factory Grip2 Kashima fork, Fox Float X2 shock, and DT Swiss wheels are genuinely premium for a 6-year-old enduro, but the asking price at 51% of seller's stated $5,000 cost basis is above the 35–40% MSRP clear band for bikes this old ($1,575–$1,800 at 35–40% of ~$4,500 stock MSRP). Flip math is...", "watch_trigger": "", "buyer_ceiling": "$2,000.", "probable_clear": "$2,200 — at the depreciation ceiling for a 6-year-old enduro. Brake-rub issue (see web research) may slow buyer interest if they research the model.", "flip_verdict": "Marginal-to-negative. Expected scenario is a small loss. Best case is $120 over 4–6 weeks — not worth the capital."}}, "4157611": {"verdict": "PASS", "review_rel": "reviews/4157611-2020-giant-anthem-advanced-pro-0-2026-05-06.md", "summary": {"logic": "The adjacent-trim BBB match (Pro 1 = $1,784 Excellent midpoint) puts the fair value of a 2020 Anthem Advanced Pro significantly below the $3,000 ask — and the Pro 0 deserves a discount vs. that, not a premium, because the Fox Live Valve electronics add documented reliability risk (wire disconnection, aging proprietary electronics, expensive service path) that knowledgeable XC buyers will price in. The seller's $12,050 MSRP claim is plausible for the Live...", "watch_trigger": "", "buyer_ceiling": "$2,400 — the maximum at which a flip could theoretically break even given Live Valve risk and narrow buyer pool.", "probable_clear": "$2,400–$2,700 — knowledgeable XC buyers will research Live Valve reliability concerns and price accordingly. The Pro 1 at $1,999 in the corpus is the floor signal; the Pro 0 comma...", "flip_verdict": "Negative. Expected scenario is a loss. Best case ($250 profit) requires both getting the bike at buyer ceiling ($2,400 — unlikely given powerseller counter dynamics) and clearing..."}}};
+  let feedbackData = {"ou_f07c1034-1528-3cdc-9d52-c4237cc34598": {"client": "dashboard", "created_at": "2026-05-13T21:46:07+00:00", "event_id": "c7af8a8b468a4358b18827321f3560b5", "kind": "feedback", "listing_id": "ou_f07c1034-1528-3cdc-9d52-c4237cc34598", "note": "decent bike, bit expensive but not bad", "source": "OU", "title": "Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB", "url": "https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598", "vote": "good"}};
+  let reviewRequests = {"ou_f07c1034-1528-3cdc-9d52-c4237cc34598": {"client": "dashboard", "created_at": "2026-05-13T21:46:41+00:00", "event_id": "efb25350f0de44f48228f2302624abd3", "kind": "review_request", "listing_id": "ou_f07c1034-1528-3cdc-9d52-c4237cc34598", "note": "Requested from dashboard", "source": "OU", "status": "requested", "title": "Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB", "url": "https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598"}};
+  const tabs = [...document.querySelectorAll("[data-tab]")];
+  const fitButton = document.querySelector("[data-fit]");
+  const recentButton = document.querySelector("[data-sort-recent]");
+  const search = document.querySelector(".search");
+  const sections = [...document.querySelectorAll("[data-section]")];
+  const cards = [...document.querySelectorAll(".card")];
+  const modal = document.querySelector("[data-modal]");
+  const modalTitle = document.querySelector("#modal-title");
+  const modalBody = document.querySelector("[data-modal-body]");
+  let activeTab = "all";
+  let preferredOnly = false;
+  let recentFirst = false;
+
+  const localFeedbackKey = "pinkbike-dashboard-feedback";
+  const localRequestKey = "pinkbike-dashboard-review-requests";
+
+  function readLocal(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); }
+    catch { return {}; }
+  }
+
+  function writeLocal(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); }
+    catch {}
+  }
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function cardPayload(card) {
+    return {
+      listing_id: card.dataset.id,
+      source: card.dataset.source,
+      title: card.dataset.title,
+      url: card.dataset.url,
+      client: "dashboard"
+    };
+  }
+
+  function mergeLocalState() {
+    feedbackData = { ...feedbackData, ...readLocal(localFeedbackKey) };
+    reviewRequests = { ...reviewRequests, ...readLocal(localRequestKey) };
+  }
+
+  function applyFeedbackBadges() {
+    cards.forEach(card => {
+      const id = card.dataset.id;
+      const existing = card.querySelector("[data-user-badge]");
+      if (existing) existing.remove();
+      const item = feedbackData[id];
+      if (!item || !item.vote) return;
+      const badge = document.createElement("span");
+      badge.dataset.userBadge = "1";
+      badge.className = `badge status-user-${item.vote}`;
+      badge.textContent = item.vote.toUpperCase();
+      card.querySelector(".topline")?.appendChild(badge);
+    });
+  }
+
+  function applyFilters() {
+    sortCards();
+    const q = (search.value || "").trim().toLowerCase();
+    sections.forEach(section => {
+      const visibleSection = activeTab === "all" || section.dataset.section === activeTab;
+      section.hidden = !visibleSection;
+    });
+    cards.forEach(card => {
+      const section = card.closest("[data-section]").dataset.section;
+      const tabMatch = activeTab === "all" || section === activeTab;
+      const fitMatch = !preferredOnly || card.dataset.fit === "fit-good" || card.dataset.fit === "fit-ok";
+      const searchMatch = !q || card.dataset.search.includes(q);
+      card.hidden = !(tabMatch && fitMatch && searchMatch);
+    });
+  }
+
+  function sortCards() {
+    const scoreKey = card => {
+      const score = Number(card.dataset.score || 0);
+      return Number.isFinite(score) ? score : 0;
+    };
+    const recentKey = card => {
+      const ts = Number(card.dataset.recent || 0);
+      return Number.isFinite(ts) && ts > 0 ? ts : 0;
+    };
+    const discoveryKey = card => {
+      const ts = Number(card.dataset.discovered || 0);
+      return Number.isFinite(ts) && ts > 0 ? ts : 0;
+    };
+    document.querySelectorAll(".grid").forEach(grid => {
+      const ordered = [...grid.children].sort((a, b) => {
+        if (recentFirst) {
+          const ak = recentKey(a);
+          const bk = recentKey(b);
+          const recency = bk - ak;
+          if (recency) return recency;
+          const discovery = discoveryKey(b) - discoveryKey(a);
+          if (discovery) return discovery;
+        }
+        const score = scoreKey(b) - scoreKey(a);
+        if (score) return score;
+        const discovery = discoveryKey(b) - discoveryKey(a);
+        if (discovery) return discovery;
+        return Number(a.dataset.index || 0) - Number(b.dataset.index || 0);
+      });
+      ordered.forEach(card => grid.appendChild(card));
+    });
+  }
+
+  cards.forEach((card, index) => { card.dataset.index = String(index); });
+
+  function syncTabs() {
+    tabs.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tab === activeTab)));
+  }
+
+  tabs.forEach(button => {
+    button.addEventListener("click", () => {
+      activeTab = activeTab === button.dataset.tab && activeTab !== "all" ? "all" : button.dataset.tab;
+      syncTabs();
+      applyFilters();
+    });
+  });
+  fitButton.addEventListener("click", () => {
+    preferredOnly = !preferredOnly;
+    fitButton.setAttribute("aria-pressed", String(preferredOnly));
+    applyFilters();
+  });
+  recentButton.addEventListener("click", () => {
+    recentFirst = !recentFirst;
+    recentButton.setAttribute("aria-pressed", String(recentFirst));
+    applyFilters();
+  });
+  search.addEventListener("input", applyFilters);
+
+  function closeModal() {
+    modal.hidden = true;
+    modalBody.innerHTML = "";
+  }
+
+  function openModal(title, body) {
+    modalTitle.textContent = title || "";
+    modalBody.innerHTML = body;
+    modal.hidden = false;
+  }
+
+  function reviewBody(card) {
+    const id = card.dataset.id;
+    const review = reviewData[id];
+    const requested = reviewRequests[id];
+    if (review && review.summary && review.summary.logic) {
+      const s = review.summary;
+      const facts = [
+        ["Buyer", s.buyer_ceiling],
+        ["Clear", s.probable_clear],
+        ["Flip", s.flip_verdict],
+        ["Trigger", s.watch_trigger]
+      ].filter(([, value]) => value);
+      const factsHtml = facts.length
+        ? `<div class="summary-facts">${facts.map(([k, v]) => `<div><strong>${escapeHtml(k)}</strong>: ${escapeHtml(v)}</div>`).join("")}</div>`
+        : "";
+      const link = review.review_rel ? `<a class="action" href="../vault/${escapeHtml(review.review_rel)}">Full review</a>` : "";
+      return `<p>${escapeHtml(s.logic)}</p>${factsHtml}<div class="modal-actions">${link}</div>`;
+    }
+    const label = requested ? "Review requested" : "Request review";
+    return `<div class="status-line">${requested ? "Queued from dashboard" : ""}</div><div class="modal-actions"><button type="button" data-request-review>${label}</button></div>`;
+  }
+
+  function noteBody(card) {
+    const id = card.dataset.id;
+    const current = feedbackData[id] || {};
+    const vote = current.vote || "";
+    return `
+      <div class="segmented">
+        <button type="button" data-vote="good" aria-pressed="${vote === "good"}">Good</button>
+        <button type="button" data-vote="bad" aria-pressed="${vote === "bad"}">Bad</button>
+      </div>
+      <textarea data-note placeholder="Short note">${escapeHtml(current.note || "")}</textarea>
+      <div class="modal-actions">
+        <span class="status-line" data-save-status></span>
+        <button type="button" data-save-note>Save</button>
+      </div>`;
+  }
+
+  async function postJson(url, payload) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  }
+
+  let activeCard = null;
+  document.addEventListener("click", async event => {
+    const close = event.target.closest("[data-close-modal]");
+    if (close || event.target === modal) {
+      closeModal();
+      return;
+    }
+    const reviewButton = event.target.closest("[data-open-review]");
+    if (reviewButton) {
+      activeCard = reviewButton.closest(".card");
+      openModal(activeCard.dataset.title, reviewBody(activeCard));
+      return;
+    }
+    const noteButton = event.target.closest("[data-open-note]");
+    if (noteButton) {
+      activeCard = noteButton.closest(".card");
+      openModal(activeCard.dataset.title, noteBody(activeCard));
+      return;
+    }
+    const voteButton = event.target.closest("[data-vote]");
+    if (voteButton) {
+      modalBody.querySelectorAll("[data-vote]").forEach(b => b.setAttribute("aria-pressed", String(b === voteButton)));
+      return;
+    }
+    const saveButton = event.target.closest("[data-save-note]");
+    if (saveButton && activeCard) {
+      const selected = modalBody.querySelector("[data-vote][aria-pressed='true']");
+      const status = modalBody.querySelector("[data-save-status]");
+      const payload = {
+        ...cardPayload(activeCard),
+        vote: selected ? selected.dataset.vote : "good",
+        note: modalBody.querySelector("[data-note]")?.value || ""
+      };
+      feedbackData[payload.listing_id] = payload;
+      writeLocal(localFeedbackKey, feedbackData);
+      try {
+        const result = await postJson("/api/feedback", payload);
+        if (result.ok && result.event) feedbackData[payload.listing_id] = result.event;
+        status.textContent = "Saved";
+      } catch {
+        status.textContent = "Saved locally";
+      }
+      applyFeedbackBadges();
+      return;
+    }
+    const requestButton = event.target.closest("[data-request-review]");
+    if (requestButton && activeCard) {
+      const status = modalBody.querySelector(".status-line");
+      const payload = { ...cardPayload(activeCard), note: "Requested from dashboard" };
+      reviewRequests[payload.listing_id] = payload;
+      writeLocal(localRequestKey, reviewRequests);
+      try {
+        const result = await postJson("/api/review-request", payload);
+        if (result.ok && result.event) reviewRequests[payload.listing_id] = result.event;
+        status.textContent = "Review requested";
+      } catch {
+        status.textContent = "Saved locally";
+      }
+      requestButton.textContent = "Review requested";
+    }
+  });
+
+  async function loadServerFeedback() {
+    try {
+      const response = await fetch("/api/feedback");
+      if (!response.ok) return;
+      const data = await response.json();
+      feedbackData = { ...feedbackData, ...(data.feedback || {}) };
+      reviewRequests = { ...reviewRequests, ...(data.review_requests || {}) };
+      applyFeedbackBadges();
+    } catch {}
+  }
+
+  mergeLocalState();
+  applyFilters();
+  applyFeedbackBadges();
+  loadServerFeedback();
+})();
+</script>
+</body>
+</html>
