@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pinkbike Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg: #0f1115; --panel: #181b22; --border: #262a33;
+    --fg: #e6e8ee; --muted: #8a93a4; --accent: #ff5c8a;
+    --good: #4ade80; --warn: #fbbf24; --bad: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 -apple-system, Segoe UI, Roboto, sans-serif;
+         background: var(--bg); color: var(--fg); }
+  header { padding: 20px 28px; border-bottom: 1px solid var(--border);
+           display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+  h1 .accent { color: var(--accent); }
+  .meta { color: var(--muted); font-size: 13px; }
+  main { padding: 24px 28px 64px; max-width: 1400px; margin: 0 auto; }
+  section { margin-bottom: 40px; }
+  h2 { margin: 0 0 16px; font-size: 16px; font-weight: 600;
+        display: flex; align-items: center; gap: 10px; }
+  .count { background: var(--panel); border: 1px solid var(--border);
+            border-radius: 999px; padding: 2px 10px; font-size: 12px;
+            color: var(--muted); font-weight: 500; }
+  .empty { color: var(--muted); padding: 16px; background: var(--panel);
+           border: 1px solid var(--border); border-radius: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+           gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 10px; overflow: hidden; display: flex;
+          flex-direction: column; transition: border-color 0.15s; }
+  .card:hover { border-color: #3a4050; }
+  .thumb { aspect-ratio: 16/10; background: #0a0c10; overflow: hidden;
+           display: flex; align-items: center; justify-content: center; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb .no-img { color: var(--muted); font-size: 12px; }
+  .body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .title { font-weight: 600; line-height: 1.3; font-size: 14px; }
+  .title a { color: var(--fg); text-decoration: none; }
+  .title a:hover { color: var(--accent); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+         font-size: 12px; color: var(--muted); }
+  .price { color: var(--fg); font-weight: 600; font-size: 15px; }
+  .score { background: #1f2530; padding: 2px 8px; border-radius: 4px;
+           color: var(--good); font-weight: 600; font-family: ui-monospace, monospace; }
+  .score.warn { color: var(--warn); }
+  .score.bad { color: var(--bad); }
+  .pill { background: #1f2530; padding: 2px 8px; border-radius: 4px;
+          font-size: 11px; color: var(--muted); }
+  .reasons { font-size: 11px; color: var(--muted); line-height: 1.4;
+             margin-top: 4px; }
+  .reasons span { display: inline-block; margin-right: 6px; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center;
+                font-size: 11px; color: var(--muted); margin-top: auto; padding-top: 4px; }
+  .id { font-family: ui-monospace, monospace; }
+  code.copy { cursor: pointer; user-select: all; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pinkbike <span class="accent">Dashboard</span></h1>
+  <div class="meta">Generated 2026-05-03 10:13 · last batch 2026-04-27 19:25 → 19:55</div>
+</header>
+<main>
+<section><h2>New since last run <span class="count">30</span></h2><div class="grid"><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4055614/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28454791/p3pb28454791.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4055614/" target="_blank" rel="noopener">2026 YETI TEAM ISSUE XTR Di2 40th Anniversary SB160</a></div>
+    <div class="row">
+      <span class="price">$13500 USD</span>
+      <span class="score ">17.25</span>
+      <span class="pill">L</span><span class="pill">San Jose</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Yeti) (+3)</span> <span>· recent model year (2026) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· 6 photos (+0.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4055614</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4046525/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28363632/p3pb28363632.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4046525/" target="_blank" rel="noopener">2022 NEW Scott Ransom 910, size XL</a></div>
+    <div class="row">
+      <span class="price">$3750 USD</span>
+      <span class="score ">16.5</span>
+      <span class="pill">XL</span><span class="pill">Austin</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Scott) (+3)</span> <span>· fairly recent (2022) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· 10 photos (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#4046525</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4171045/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29607459/p3pb29607459.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4171045/" target="_blank" rel="noopener">2023 Specialized Stumpjumper EVO S-Works Carbon</a></div>
+    <div class="row">
+      <span class="price">$2600 USD</span>
+      <span class="score ">16.25</span>
+      <span class="pill">M</span><span class="pill">Seattle</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Specialized) (+3)</span> <span>· fairly recent (2023) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· 5 photos (+0.5)</span> <span>· attractive price ($2600) (+2)</span> <span>· premium drivetrain (X01) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4171045</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173111/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29630250/p3pb29630250.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173111/" target="_blank" rel="noopener">2024 Santa Cruz Nomad Size Medium</a></div>
+    <div class="row">
+      <span class="price">$3500 USD</span>
+      <span class="score ">16</span>
+      <span class="pill">M</span><span class="pill">Mobile</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 8 photos (+1)</span> <span>· attractive price ($3500) (+2)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173111</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4169049/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29625354/p3pb29625354.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4169049/" target="_blank" rel="noopener">2024 Evil Wreckoning LS + Spare Wheelset Onyx/Nobl/TRP</a></div>
+    <div class="row">
+      <span class="price">$4300 USD</span>
+      <span class="score ">15.25</span>
+      <span class="pill">L</span><span class="pill">Denver</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Evil) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 14 photos (+1)</span> <span>· midrange drivetrain (GX) (+0.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4169049</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173567/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29634941/p3pb29634941.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173567/" target="_blank" rel="noopener">2024 Evil Wreckoning LS XO1 AXS Fox 38 Vivid Air</a></div>
+    <div class="row">
+      <span class="price">$4595 USD</span>
+      <span class="score ">15</span>
+      <span class="pill">M</span><span class="pill">Tampa Bay</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Evil) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· powerseller (+1)</span> <span>· 18 photos (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173567</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4044435/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28343813/p3pb28343813.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4044435/" target="_blank" rel="noopener">2022 NEW Pivot Switchblade Pro XT, Size XS</a></div>
+    <div class="row">
+      <span class="price">$4800 USD</span>
+      <span class="score ">15</span>
+      <span class="pill">XS</span><span class="pill">Austin</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Pivot) (+3)</span> <span>· fairly recent (2022) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· midrange drivetrain (XT) (+0.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4044435</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4160813/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29501423/p3pb29501423.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4160813/" target="_blank" rel="noopener">2024 Norco Sight C SE</a></div>
+    <div class="row">
+      <span class="price">$5700 USD</span>
+      <span class="score ">14.75</span>
+      <span class="pill">M</span><span class="pill">Manchester By The Sea</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Norco) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· 10 photos (+1)</span> <span>· premium drivetrain (AXS) (+1.5)</span> <span>· premium suspension (kashima) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4160813</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4170133/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29597911/p3pb29597911.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4170133/" target="_blank" rel="noopener">2024 Santa Cruz Megatower 2 C NX - Small</a></div>
+    <div class="row">
+      <span class="price">$2900 USD</span>
+      <span class="score ">14.5</span>
+      <span class="pill">S</span><span class="pill">San Diego</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· 15 photos (+1)</span> <span>· attractive price ($2900) (+2)</span></div>
+    <div class="footer-row">
+      <span class="id">#4170133</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4169907/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29639084/p3pb29639084.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4169907/" target="_blank" rel="noopener">2027 Santa Cruz Nomad 90 Kit</a></div>
+    <div class="row">
+      <span class="price">$6099 USD</span>
+      <span class="score ">14.5</span>
+      <span class="pill">L</span><span class="pill">Carlsbad</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· recent model year (2027) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· 10 photos (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#4169907</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173565/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29634907/p3pb29634907.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173565/" target="_blank" rel="noopener">2016 Yeti SB6c Upgraded size L</a></div>
+    <div class="row">
+      <span class="price">$1950 USD</span>
+      <span class="score ">14.25</span>
+      <span class="pill">L</span><span class="pill">Medford</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Yeti) (+3)</span> <span>· carbon frame (+2)</span> <span>· 17 photos (+1)</span> <span>· attractive price ($1950) (+2)</span> <span>· premium drivetrain (XTR) (+1.5)</span> <span>· premium suspension (fox 38) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173565</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173559/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29634841/p3pb29634841.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173559/" target="_blank" rel="noopener">2022 Santa Cruz Megatower size L</a></div>
+    <div class="row">
+      <span class="price">$3000 USD</span>
+      <span class="score ">13.75</span>
+      <span class="pill">L</span><span class="pill">Ellicott City</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· fairly recent (2022) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· 5 photos (+0.5)</span> <span>· attractive price ($3000) (+2)</span> <span>· premium drivetrain (AXS) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173559</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4170921/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29606050/p3pb29606050.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4170921/" target="_blank" rel="noopener">2024 Specialized Enduro</a></div>
+    <div class="row">
+      <span class="price">$4000 USD</span>
+      <span class="score ">13.5</span>
+      <span class="pill">L</span><span class="pill">Salt Lake City</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Specialized) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· 14 photos (+1)</span> <span>· attractive price ($4000) (+2)</span> <span>· premium suspension (zeb ultimate) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4170921</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4049599/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28454668/p3pb28454668.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4049599/" target="_blank" rel="noopener">2026 Yeti Sb160</a></div>
+    <div class="row">
+      <span class="price">$4800 USD</span>
+      <span class="score ">13.5</span>
+      <span class="pill">L</span><span class="pill">San Jose</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Yeti) (+3)</span> <span>· recent model year (2026) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· 7 photos (+0.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4049599</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4167797/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29576542/p3pb29576542.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4167797/" target="_blank" rel="noopener">2027 Santa Cruz Nomad 7</a></div>
+    <div class="row">
+      <span class="price">$6099 USD</span>
+      <span class="score ">13.5</span>
+      <span class="pill">M</span><span class="pill">Carlsbad</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· recent model year (2027) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· 24 photos (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#4167797</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4168850/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29612652/p3pb29612652.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4168850/" target="_blank" rel="noopener">2025 Pivot Firebird Limited Purple Galaxy / I-9 Wheels</a></div>
+    <div class="row">
+      <span class="price">$8200 USD</span>
+      <span class="score ">13.5</span>
+      <span class="pill">L</span><span class="pill">Asheville</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Pivot) (+3)</span> <span>· recent model year (2025) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 10 photos (+1)</span> <span>· premium suspension (fox factory) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4168850</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173611/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29635460/p3pb29635460.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173611/" target="_blank" rel="noopener">2026 Ibis Ripmo V3 - GX AXS T-Type - Medium - New!</a></div>
+    <div class="row">
+      <span class="price">$6000 USD</span>
+      <span class="score ">13.25</span>
+      <span class="pill">M</span><span class="pill">Denver</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Ibis) (+3)</span> <span>· recent model year (2026) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· 11 photos (+1)</span> <span>· midrange drivetrain (GX EAGLE) (+0.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173611</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4093708/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28857283/p3pb28857283.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4093708/" target="_blank" rel="noopener">2025 Giant Reign SX (XL)</a></div>
+    <div class="row">
+      <span class="price">$2900 USD</span>
+      <span class="score ">13</span>
+      <span class="pill">XL</span><span class="pill">Telluride</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Giant) (+3)</span> <span>· recent model year (2025) (+3)</span> <span>· excellent condition (+1)</span> <span>· powerseller (+1)</span> <span>· 13 photos (+1)</span> <span>· premium drivetrain (XTR) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4093708</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4093743/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28857564/p3pb28857564.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4093743/" target="_blank" rel="noopener">2025 Giant Reign SX (L)</a></div>
+    <div class="row">
+      <span class="price">$2900 USD</span>
+      <span class="score ">13</span>
+      <span class="pill">L</span><span class="pill">Telluride</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Giant) (+3)</span> <span>· recent model year (2025) (+3)</span> <span>· excellent condition (+1)</span> <span>· powerseller (+1)</span> <span>· 14 photos (+1)</span> <span>· premium drivetrain (XTR) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4093743</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4055621/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28454916/p3pb28454916.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4055621/" target="_blank" rel="noopener">2026 Yeti SB165</a></div>
+    <div class="row">
+      <span class="price">$6400 USD</span>
+      <span class="score ">13</span>
+      <span class="pill">M</span><span class="pill">San Jose</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Yeti) (+3)</span> <span>· recent model year (2026) (+3)</span> <span>· carbon frame (+2)</span> <span>· new condition (+2)</span> <span>· powerseller (+1)</span> <span>· premium drivetrain (XTR) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4055621</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4166628/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29561818/p3pb29561818.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4166628/" target="_blank" rel="noopener">2025 Yeti SB160, XX Transmission, 2 shocks! *Lower Price*</a></div>
+    <div class="row">
+      <span class="price">$5500 USD</span>
+      <span class="score ">13</span>
+      <span class="pill">L</span><span class="pill">Anchorage</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Yeti) (+3)</span> <span>· recent model year (2025) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 11 photos (+1)</span> <span>· premium suspension (fox factory) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4166628</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4159566/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29488005/p3pb29488005.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4159566/" target="_blank" rel="noopener">2020 Pivot Firebird 29 XO1 Build</a></div>
+    <div class="row">
+      <span class="price">$2900 USD</span>
+      <span class="score ">12.5</span>
+      <span class="pill">L</span><span class="pill">Irvine</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Pivot) (+3)</span> <span>· aging (2020, 6y old) (-0.5)</span> <span>· carbon frame (+2)</span> <span>· 18 photos (+1)</span> <span>· attractive price ($2900) (+2)</span> <span>· premium drivetrain (X01) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4159566</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173002/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29629059/p3pb29629059.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173002/" target="_blank" rel="noopener">2019 Santa Cruz Nomad</a></div>
+    <div class="row">
+      <span class="price">$3400 USD</span>
+      <span class="score ">12.5</span>
+      <span class="pill">M</span><span class="pill">Aliso Viejo</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· carbon frame (+2)</span> <span>· powerseller (+1)</span> <span>· 15 photos (+1)</span> <span>· attractive price ($3400) (+2)</span> <span>· premium drivetrain (XTR) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173002</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173558/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29634821/p3pb29634821.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173558/" target="_blank" rel="noopener">2023 Propain Sprindrift 4 Large</a></div>
+    <div class="row">
+      <span class="price">$1509 USD</span>
+      <span class="score ">12</span>
+      <span class="pill">L</span><span class="pill">New Gloucester</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Propain) (+3)</span> <span>· fairly recent (2023) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· 13 photos (+1)</span> <span>· attractive price ($1509) (+2)</span> <span>· low-effort listing on Propain at $1509 (13 photos, 172-char desc) — likely deal (+2.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173558</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4092042/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28842845/p3pb28842845.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4092042/" target="_blank" rel="noopener">2025 Giant Trance X SX (Med)</a></div>
+    <div class="row">
+      <span class="price">$2600 USD</span>
+      <span class="score ">12</span>
+      <span class="pill">M</span><span class="pill">Telluride</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Giant) (+3)</span> <span>· recent model year (2025) (+3)</span> <span>· excellent condition (+1)</span> <span>· powerseller (+1)</span> <span>· 14 photos (+1)</span> <span>· premium drivetrain (XX SL) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4092042</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4170096/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29597588/p3pb29597588.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4170096/" target="_blank" rel="noopener">2024 Pivot Firebird custom build</a></div>
+    <div class="row">
+      <span class="price">$4800 USD</span>
+      <span class="score warn">11.5</span>
+      <span class="pill">M</span><span class="pill">Sedona</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Pivot) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 9 photos (+1)</span> <span>· premium drivetrain (XTR) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4170096</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173486/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29634049/p3pb29634049.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173486/" target="_blank" rel="noopener">2019 Specialized Stumpjumper Carbon 29 Medium</a></div>
+    <div class="row">
+      <span class="price">$1800 USD</span>
+      <span class="score warn">11.5</span>
+      <span class="pill">M</span><span class="pill">Whitefish</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Specialized) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· attractive price ($1800) (+2)</span> <span>· thorough description (1069 chars) (+1.5)</span> <span>· good MSRP discount ($1800/$4220, 42%) (+2)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173486</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/3939622/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29339341/p3pb29339341.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/3939622/" target="_blank" rel="noopener">2018 Santa Cruz nomad c size small</a></div>
+    <div class="row">
+      <span class="price">$3500 USD</span>
+      <span class="score warn">11.5</span>
+      <span class="pill">S</span><span class="pill">Banner Elk</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· carbon frame (+2)</span> <span>· 8 photos (+1)</span> <span>· attractive price ($3500) (+2)</span> <span>· premium suspension (fox 38) (+1.5)</span> <span>· service history (recently serviced) (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#3939622</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4173480/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29633999/p3pb29633999.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4173480/" target="_blank" rel="noopener">2022 Santa cruz Bronson</a></div>
+    <div class="row">
+      <span class="price">$4500 USD</span>
+      <span class="score warn">11.25</span>
+      <span class="pill">M</span><span class="pill">Utica</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Santa Cruz) (+3)</span> <span>· fairly recent (2022) (+1.5)</span> <span>· carbon frame (+2)</span> <span>· 9 photos (+1)</span> <span>· premium drivetrain (XX1) (+1.5)</span> <span>· premium suspension (fox factory) (+1.5)</span></div>
+    <div class="footer-row">
+      <span class="id">#4173480</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4162558/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb29518893/p3pb29518893.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4162558/" target="_blank" rel="noopener">2024 Pivot Switchblade Fully Loaded (size Large)</a></div>
+    <div class="row">
+      <span class="price">$4750 USD</span>
+      <span class="score warn">11.25</span>
+      <span class="pill">L</span><span class="pill">Vancouver</span>
+    </div>
+    <div class="reasons"><span>· premium brand (Pivot) (+3)</span> <span>· recent model year (2024) (+3)</span> <span>· carbon frame (+2)</span> <span>· excellent condition (+1)</span> <span>· 6 photos (+0.5)</span> <span>· premium wheels (dt swiss) (+1)</span></div>
+    <div class="footer-row">
+      <span class="id">#4162558</span>
+      <span>first seen 5d ago</span>
+    </div>
+  </div>
+</article></div></section><section><h2>Needs review <span class="count">4</span></h2><div class="grid"><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4097387/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28896733/p3pb28896733.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4097387/" target="_blank" rel="noopener">2024 YT Capra Core 4 XL</a></div>
+    <div class="row">
+      <span class="price">$3000 USD</span>
+      <span class="score ">14.5</span>
+      <span class="pill">XL</span><span class="pill">La Habra</span>
+    </div>
+    
+    <div class="footer-row">
+      <span class="id">#4097387</span>
+      <span>queued 2d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4059695/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28497755/p3pb28497755.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4059695/" target="_blank" rel="noopener">2022 Transition Scout - Medium Carbon GX</a></div>
+    <div class="row">
+      <span class="price">$2500 USD</span>
+      <span class="score ">12.5</span>
+      <span class="pill">M</span><span class="pill">San Clemente</span>
+    </div>
+    
+    <div class="footer-row">
+      <span class="id">#4059695</span>
+      <span>queued 2d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4060500/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28507111/p3pb28507111.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4060500/" target="_blank" rel="noopener">2020 Norco Sight For Sale</a></div>
+    <div class="row">
+      <span class="price">$3000 USD</span>
+      <span class="score ">12</span>
+      <span class="pill">M</span><span class="pill">Yorba Linda</span>
+    </div>
+    
+    <div class="footer-row">
+      <span class="id">#4060500</span>
+      <span>queued 2d ago</span>
+    </div>
+  </div>
+</article><article class="card">
+  <a class="thumb" href="https://www.pinkbike.com/buysell/4086360/" target="_blank" rel="noopener"><img src="https://ep1.pinkbike.org/p3pb28779945/p3pb28779945.jpg" loading="lazy" alt=""></a>
+  <div class="body">
+    <div class="title"><a href="https://www.pinkbike.com/buysell/4086360/" target="_blank" rel="noopener">2020 Ibis Mojo HD4 - Fireball Red (Size Med)</a></div>
+    <div class="row">
+      <span class="price">$2050 USD</span>
+      <span class="score ">12</span>
+      <span class="pill">M</span><span class="pill">Lake Forest</span>
+    </div>
+    
+    <div class="footer-row">
+      <span class="id">#4086360</span>
+      <span>queued 2d ago</span>
+    </div>
+  </div>
+</article></div></section>
+</main>
+</body>
+</html>

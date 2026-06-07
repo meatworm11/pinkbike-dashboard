@@ -1,0 +1,1998 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pinkbike Deal Desk</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101112">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Deal Desk">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root {
+    --bg: #101112;
+    --surface: #171818;
+    --surface-2: #20211f;
+    --line: #30322f;
+    --line-strong: #45483f;
+    --text: #f4f2ed;
+    --muted: #aaa59a;
+    --soft: #d8d0bf;
+    --accent: #f15b5b;
+    --good: #37a779;
+    --warn: #d6a740;
+    --bad: #e05656;
+    --chip: #262824;
+    --shadow: 0 16px 40px rgba(0,0,0,.32);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(circle at 15% -10%, rgba(241,91,91,.2), transparent 30rem),
+      linear-gradient(180deg, #141513 0%, var(--bg) 38rem);
+    color: var(--text);
+  }
+  a { color: inherit; }
+  .shell { width: min(1440px, 100%); margin: 0 auto; padding: 20px 20px 56px; }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+    gap: 18px;
+    align-items: stretch;
+    margin-bottom: 16px;
+  }
+  .hero-main {
+    min-height: 190px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(23,24,24,.84);
+    box-shadow: var(--shadow);
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--soft);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--good);
+    border-radius: 999px;
+  }
+  h1 {
+    margin: 12px 0 8px;
+    max-width: 780px;
+    font-size: clamp(32px, 7vw, 66px);
+    line-height: .95;
+    letter-spacing: 0;
+  }
+  .subhead { max-width: 760px; color: var(--muted); font-size: 15px; }
+  .hero-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .metric {
+    min-height: 90px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(32,33,31,.86);
+  }
+  .metric-value { display: block; font-size: 30px; font-weight: 800; line-height: 1; }
+  .metric-label { display: block; margin-top: 7px; color: var(--soft); font-weight: 700; }
+  .metric-note { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 -20px 20px;
+    padding: 10px 20px;
+    border-top: 1px solid rgba(255,255,255,.04);
+    border-bottom: 1px solid var(--line);
+    background: rgba(16,17,18,.92);
+    backdrop-filter: blur(14px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .tabs, .filters { display: flex; gap: 8px; align-items: center; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar, .filters::-webkit-scrollbar { display: none; }
+  button, .action {
+    min-height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--soft);
+    font: inherit;
+    font-weight: 700;
+    padding: 8px 11px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  button[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: rgba(241,91,91,.14);
+    color: var(--text);
+  }
+  .search {
+    width: min(420px, 34vw);
+    min-height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d0e0e;
+    color: var(--text);
+    padding: 8px 11px;
+    font: inherit;
+  }
+  .layout { display: grid; gap: 22px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 12px;
+    margin: 10px 0 12px;
+  }
+  h2 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: 0; }
+  .section-meta { color: var(--muted); font-size: 13px; }
+  h3 {
+    margin: 18px 0 10px;
+    color: var(--soft);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    margin-left: 7px;
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .empty {
+    color: var(--muted);
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(23,24,24,.72);
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+  .card {
+    position: relative;
+    display: flex;
+    min-height: 190px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  }
+  .card:hover { border-color: var(--line-strong); }
+  /* swipe-to-delete: .card-surface slides left to reveal the red .card-delete tab.
+     flex:1 makes the surface fill the full (row-stretched) card height so the red
+     layer underneath never peeks out at the bottom in the multi-column grid. */
+  .card-surface {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 142px minmax(0, 1fr);
+    min-height: 190px;
+    background: var(--surface);
+    touch-action: pan-y;
+  }
+  /* Only promote to a compositor layer + paint the red layer while a swipe is
+     actually active. A permanent will-change layer desyncs by a pixel during
+     fast momentum-scroll and leaks the red underneath; opacity:0 at rest means
+     there is nothing red to leak even if a hairline seam appears. */
+  .card.swipe-active .card-surface { box-shadow: -12px 0 26px rgba(0,0,0,.4); will-change: transform; }
+  .card-delete {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 0 24px;
+    background: linear-gradient(90deg, #6f1d1d 0%, var(--bad) 55%, #ff6b6b 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0;
+  }
+  .card.swipe-active .card-delete { opacity: 1; }
+  .card-delete svg { width: 20px; height: 20px; }
+  .card-delete-label { display: inline-flex; align-items: center; gap: 9px; transition: transform .12s ease; }
+  .card.swipe-commit .card-delete { background: var(--bad); }
+  .card.swipe-commit .card-delete-label { transform: scale(1.14); }
+  /* SOLD marker: overlays only the bike image (.thumb), shown by the scrape
+     that detected the sale and gone next scrape. pointer-events:none so the
+     image link, swipe, and buttons all keep working underneath. */
+  .sold-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px;
+    text-align: center;
+    background: rgba(9,10,10,.72);
+    pointer-events: none;
+  }
+  .sold-stamp {
+    font-size: clamp(15px, 5vw, 20px);
+    font-weight: 900;
+    letter-spacing: .12em;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 2px 11px;
+    border: 2px solid var(--bad);
+    border-radius: 6px;
+    background: rgba(224,86,86,.2);
+    transform: rotate(-7deg);
+  }
+  .sold-sub { color: var(--soft); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+  .thumb { position: relative; background: #0b0c0c; overflow: hidden; text-decoration: none; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .no-img { height: 100%; display: grid; place-items: center; color: var(--muted); font-size: 12px; }
+  .body { min-width: 0; padding: 13px; display: flex; flex-direction: column; gap: 9px; }
+  .topline { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--chip);
+    color: var(--soft);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .source-pb { background: #2c3328; color: #c9e7ba; }
+  .source-ou { background: #332b25; color: #ffd0a8; }
+  .source-fb { background: #25303a; color: #b8dcff; }
+  .status-buy { background: rgba(55,167,121,.18); color: #60d39d; }
+  .status-watch, .status-review { background: rgba(214,167,64,.18); color: #f0c96a; }
+  .status-pass { background: rgba(224,86,86,.16); color: #f17878; }
+  .status-new { background: rgba(241,91,91,.16); color: #ff9a9a; }
+  .status-candidate { background: rgba(216,208,191,.12); color: var(--soft); }
+  .status-user-good { background: rgba(55,167,121,.18); color: #79d9ad; }
+  .status-user-bad { background: rgba(224,86,86,.16); color: #f17878; }
+  .fit-good { background: rgba(55,167,121,.18); color: #79d9ad; }
+  .fit-ok { background: rgba(214,167,64,.18); color: #f0c96a; }
+  .fit-bad { background: rgba(224,86,86,.16); color: #f17878; }
+  .fit-unknown { background: rgba(216,208,191,.10); color: var(--muted); }
+  .title { margin: 0; font-size: 15px; line-height: 1.25; font-weight: 800; }
+  .title a { text-decoration: none; }
+  .title a:hover { color: var(--accent); }
+  .facts { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+  .price { color: var(--text); font-size: 20px; font-weight: 900; line-height: 1; }
+  .score { color: var(--good); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-weight: 800; }
+  .score.warn { color: var(--warn); }
+  .score.bad { color: var(--bad); }
+  .reasons { color: var(--muted); font-size: 12px; line-height: 1.35; }
+  .risk { display: flex; gap: 6px; flex-wrap: wrap; }
+  .risk span {
+    padding: 3px 7px;
+    border: 1px solid rgba(224,86,86,.35);
+    border-radius: 6px;
+    color: #f17878;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .card-footer { margin-top: auto; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .seen { color: var(--muted); font-size: 11px; }
+  .actions { display: flex; gap: 7px; align-items: center; }
+  .action { min-height: 30px; padding: 6px 8px; font-size: 12px; }
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(0,0,0,.56);
+    display: grid;
+    place-items: end center;
+    padding: 16px;
+  }
+  .modal {
+    width: min(560px, 100%);
+    max-height: min(720px, calc(100vh - 32px));
+    overflow: auto;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: #171818;
+    box-shadow: var(--shadow);
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-title { margin: 0; font-size: 16px; line-height: 1.25; }
+  .modal-body { padding: 14px; display: grid; gap: 12px; }
+  .modal-body p { margin: 0; color: var(--soft); }
+  .summary-facts { display: grid; gap: 8px; color: var(--muted); font-size: 13px; }
+  .summary-facts div { padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: #111212; }
+  .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  textarea {
+    width: 100%;
+    min-height: 112px;
+    resize: vertical;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d0e0e;
+    color: var(--text);
+    padding: 10px;
+    font: inherit;
+  }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
+  .status-line { min-height: 18px; color: var(--muted); font-size: 12px; }
+  .undo-toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%) translateY(140%);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: calc(100vw - 24px);
+    padding: 11px 14px 11px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: rgba(23,24,24,.97);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .22s ease, opacity .22s ease;
+  }
+  .undo-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+  .undo-toast span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .undo-toast button { min-height: 30px; padding: 5px 13px; border-color: var(--accent); color: var(--text); background: rgba(241,91,91,.16); }
+  [hidden] { display: none !important; }
+  @media (max-width: 900px) {
+    .shell { padding: 12px 12px 44px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-main { min-height: 170px; padding: 18px; }
+    .toolbar { margin: 0 -12px 16px; padding: 9px 12px; grid-template-columns: 1fr; }
+    .search { width: 100%; }
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .hero-side { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .metric { min-height: 76px; padding: 10px; }
+    .metric-value { font-size: 24px; }
+    .metric-note { display: none; }
+    .card { min-height: 176px; }
+    .card-surface { grid-template-columns: 118px minmax(0, 1fr); min-height: 176px; }
+    .body { padding: 11px; gap: 7px; }
+    .title { font-size: 14px; }
+    .price { font-size: 18px; }
+    .reasons { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="hero">
+    <div class="hero-main">
+      <div class="eyebrow">Dana Point deal desk</div>
+      <h1>bike finder</h1>
+      <div class="subhead">Fresh local listings, review queue, and active shortlist from the latest scrape. Dana Point radius, $3,000 ceiling, Large-first fit.</div>
+    </div>
+    <div class="hero-side">
+<div class="metric"><span class="metric-value">13</span><span class="metric-label">New</span><span class="metric-note">latest scrape window</span></div><div class="metric"><span class="metric-value">8</span><span class="metric-label">Review</span><span class="metric-note">queue waiting</span></div><div class="metric"><span class="metric-value">22</span><span class="metric-label">Shortlist</span><span class="metric-note">active candidates</span></div><div class="metric"><span class="metric-value">16</span><span class="metric-label">Fit</span><span class="metric-note">Large or Medium</span></div><div class="metric"><span class="metric-value">0</span><span class="metric-label">Sold</span><span class="metric-note">since last scrape</span></div><div class="metric"><span class="metric-value">12</span><span class="metric-label">Reviewed</span><span class="metric-note">with verdicts</span></div>
+    </div>
+  </header>
+  <nav class="toolbar" aria-label="Dashboard controls">
+    <div class="tabs" role="tablist">
+      <button type="button" data-tab="all" aria-pressed="true">All</button>
+      <button type="button" data-tab="new" aria-pressed="false">New <span>13</span></button>
+      <button type="button" data-tab="review" aria-pressed="false">Review <span>8</span></button>
+      <button type="button" data-tab="shortlist" aria-pressed="false">Shortlist <span>22</span></button>
+    </div>
+    <div class="filters">
+      <button type="button" data-fit="preferred" aria-pressed="false">L/M only</button>
+      <button type="button" data-sort-recent aria-pressed="false" title="Sort by actual listing age where available. OfferUp age coverage: 24/24 (100%)." aria-label="Sort by actual listing age where available. OfferUp age coverage: 24/24 (100%).">Recent first</button>
+      <input class="search" type="search" placeholder="Search title, city, ID" aria-label="Search listings">
+    </div>
+  </nav>
+  <main class="layout">
+<section data-section="new"><div class="section-head"><div><h2>New since last run <span class="count">13</span></h2><div class="section-meta">Batch 2026-06-07 13:26 to 14:14; generated 2026-06-07 14:15</div></div></div><div class="grid"><article class="card" data-id="ou_e2c311a9-a7bb-3349-aefe-ce4734774d8d" data-source="OU" data-title="2022 Specialized Stumpjumper Carbon Custom" data-url="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" data-score="12.5" data-recent="1780617600" data-discovered="1780864238" data-fit="fit-ok" data-search="2022 specialized stumpjumper carbon custom mission viejo ou_e2c311a9-a7bb-3349-aefe-ce4734774d8d ou m new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" target="_blank" rel="noopener"><img src="https://images.offerup.com/fYG0QfrxIM8dww-vmDsHzT3Qiao=/333x250/b421/b421762ac5eb4cbe8899779f7bb2ea62.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" target="_blank" rel="noopener">2022 Specialized Stumpjumper Carbon Custom</a></div>
+      <div class="facts"><span class="price">$2200</span><span>Mission Viejo</span><span>listed 2d ago</span><span>OfferUp</span><span class="score ">score 12.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | 11 photos (+1) | premium drivetrain (XX1) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 44m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_f5e0922f-1e1a-30e0-b115-d9d4b684d559" data-source="OU" data-title="2023 YT Capra 29 core 3" data-url="https://offerup.com/item/detail/f5e0922f-1e1a-30e0-b115-d9d4b684d559" data-score="9.5" data-recent="1780531200" data-discovered="1780864070" data-fit="fit-unknown" data-search="2023 yt capra 29 core 3 tustin ou_f5e0922f-1e1a-30e0-b115-d9d4b684d559 ou  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/f5e0922f-1e1a-30e0-b115-d9d4b684d559" target="_blank" rel="noopener"><img src="https://images.offerup.com/vem2emp3tMMEr-DBoQMOK7XnMaU=/250x333/7323/7323cff10f7c4305aa886777fe97c38d.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/f5e0922f-1e1a-30e0-b115-d9d4b684d559" target="_blank" rel="noopener">2023 YT Capra 29 core 3</a></div>
+      <div class="facts"><span class="price">$3000</span><span>Tustin</span><span>listed 3d ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Yt) (+3) | fairly recent (2023) (+2.5) | midrange drivetrain (XT) (+0.5) | premium suspension (super deluxe ultimate) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 47m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_5fef2406-10e2-3d1e-92cd-b622d49c13b9" data-source="OU" data-title="2022 giant trance 27.5 (non x) need gone" data-url="https://offerup.com/item/detail/5fef2406-10e2-3d1e-92cd-b622d49c13b9" data-score="8" data-recent="1780617600" data-discovered="1780782583" data-fit="fit-good" data-search="2022 giant trance 27.5 (non x) need gone costa mesa ou_5fef2406-10e2-3d1e-92cd-b622d49c13b9 ou l pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/5fef2406-10e2-3d1e-92cd-b622d49c13b9" target="_blank" rel="noopener"><img src="https://images.offerup.com/bgSEAD232oUo5piKZerBPgiZhpw=/250x540/dd72/dd7276bdef77441886fca2a6205bb98b.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/5fef2406-10e2-3d1e-92cd-b622d49c13b9" target="_blank" rel="noopener">2022 giant trance 27.5 (non x) need gone</a></div>
+      <div class="facts"><span class="price">$1100</span><span>Costa Mesa</span><span>listed 2d ago</span><span>OfferUp</span><span class="score warn">score 8</span></div>
+      
+      <div class="reasons">premium brand (Giant) (+3) | fairly recent (2022) (+2.5) | midrange drivetrain (GX) (+0.5) | at BBB market (BBB midpoint $1277, listing 86%) (+0)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 23h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_976994015245273" data-source="FB" data-title="2022 Specialized Stumpjumper Carbon Fiber Full Suspension Mountain Bike" data-url="https://www.facebook.com/marketplace/item/976994015245273/" data-score="7.5" data-recent="1780617600" data-discovered="1780800050" data-fit="fit-unknown" data-search="2022 specialized stumpjumper carbon fiber full suspension mountain bike lake forest fb_976994015245273 fb  watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/976994015245273/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/712644632_2874995159502799_7824127309389931960_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=108&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=sOFuuxmxfh4Q7kNvwFJRL-e&amp;_nc_oc=AdoWDqOV4Ax-jqtFRElAuxvMtkVtu5ywBG_uB3QgRtfnw5mRnpH_Tujw2BEq_uH3M3I&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=3d2pzUS1G9ss8YQV4U4QEw&amp;_nc_ss=7b2a8&amp;oh=00_Af_FCh_oaGhdqnfTx7NJe4ebxYPSropC96FeEom98CKREQ&amp;oe=6A2A96EB" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/976994015245273/" target="_blank" rel="noopener">2022 Specialized Stumpjumper Carbon Fiber Full Suspension Mountain Bike</a></div>
+      <div class="facts"><span class="price">$2,200</span><span>Lake Forest</span><span>listed 2d ago</span><span>Facebook Marketplace</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1015295447625273" data-source="FB" data-title="CARBON 2022 YT Izzo Blaze 29er MTB SRAM GX 1x12 Size MEDIUM" data-url="https://www.facebook.com/marketplace/item/1015295447625273/" data-score="7.5" data-recent="1780617600" data-discovered="1780800050" data-fit="fit-ok" data-search="carbon 2022 yt izzo blaze 29er mtb sram gx 1x12 size medium mission viejo fb_1015295447625273 fb m watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1015295447625273/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/718190086_1666266164492612_6005649015490498091_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=109&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=XgYtysVjl3wQ7kNvwG5rNrC&amp;_nc_oc=AdqPFfsZJsRaIMVQbkN23H_wAvb8oMWdJQtcmjD8QZv07B4_YzD54mj_QpQte4xFuA4&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=wsrBAEUQQh1lWMzYUSY_9Q&amp;_nc_ss=7b2a8&amp;oh=00_Af_ZD4XQ6zbvs6WN13A2Vjz6_Vv2MSWErTNMO6JCkm9wCQ&amp;oe=6A2A97F3" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1015295447625273/" target="_blank" rel="noopener">CARBON 2022 YT Izzo Blaze 29er MTB SRAM GX 1x12 Size MEDIUM</a></div>
+      <div class="facts"><span class="price">$2,400</span><span>Mission Viejo</span><span>listed 2d ago</span><span>Facebook Marketplace</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Yt) (+3) | fairly recent (2022) (+2.5) | Facebook complete-bike relevance (bike-context) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1671615247216404" data-source="FB" data-title="2022 Giant Talon 2 29er MTB Size SMALL 1x9 Speed" data-url="https://www.facebook.com/marketplace/item/1671615247216404/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-bad" data-search="2022 giant talon 2 29er mtb size small 1x9 speed mission viejo fb_1671615247216404 fb s new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1671615247216404/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/718160782_2216625605770032_8319002614046157776_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=104&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=fAPMI8WXywsQ7kNvwEbA1vy&amp;_nc_oc=Ado4Q5qpeOvyHqkQmSC9Xhr0BWlY2wWcDKYeZonbdqu45IRC6tySGOghObkc3KBO1LE&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af-yE1rEfyCCRfvcvLxqtFbfmBLmPsvVQrfp1vnPvna61A&amp;oe=6A2A9682" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-bad">Small</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1671615247216404/" target="_blank" rel="noopener">2022 Giant Talon 2 29er MTB Size SMALL 1x9 Speed</a></div>
+      <div class="facts"><span class="price">$525</span><span>Mission Viejo</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Giant) (+3) | fairly recent (2022) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_26954691327523392" data-source="FB" data-title="2022 Cannondale Trail 5 29er MTB Shimano DEORE 1x10 ROCKSHOX Fork Size LARGE" data-url="https://www.facebook.com/marketplace/item/26954691327523392/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-good" data-search="2022 cannondale trail 5 29er mtb shimano deore 1x10 rockshox fork size large mission viejo fb_26954691327523392 fb l new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/26954691327523392/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/716353432_4539677746279591_6438785671977370881_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=107&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=wh4FP6GBQ3QQ7kNvwFMH1ys&amp;_nc_oc=AdoE7oHYvsqE_XSEFZ6msTuDuXzv2ar_83Sk8fS9J_c2M-UxDWhxf0xffmaVdEPwn5A&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af8YNA8o9AItgaKtMG37el8XCEf4XUBRs5hGWtZCiIUxGA&amp;oe=6A2A956F" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/26954691327523392/" target="_blank" rel="noopener">2022 Cannondale Trail 5 29er MTB Shimano DEORE 1x10 ROCKSHOX Fork Size LARGE</a></div>
+      <div class="facts"><span class="price">$575</span><span>Mission Viejo</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Cannondale) (+3) | fairly recent (2022) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1726242702145242" data-source="FB" data-title="2023/2024 Trek Allant+ 7 Lowstep – Size M – Like New (Under 250 Miles)" data-url="https://www.facebook.com/marketplace/item/1726242702145242/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-unknown" data-search="2023/2024 trek allant+ 7 lowstep – size m – like new (under 250 miles) irvine fb_1726242702145242 fb  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1726242702145242/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/715376274_1659629625147219_516118581467011206_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=110&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=HGEp37W8ujMQ7kNvwEIOLO-&amp;_nc_oc=AdphORyDpx_4qVMACchWPjPGEl3vTXPm60p15lS1aZety1xeZPhYIRqd4aUiB0vyfcA&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=yBDB1knXcpfVrW5mQ7nUdw&amp;_nc_ss=7b2a8&amp;oh=00_Af840nAciqtNS9d68xR_wZNywxjgcUzqws5tNEYFn_FgEw&amp;oe=6A2BC333" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1726242702145242/" target="_blank" rel="noopener">2023/2024 Trek Allant+ 7 Lowstep – Size M – Like New (Under 250 Miles)</a></div>
+      <div class="facts"><span class="price">$1,750</span><span>Irvine</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Trek) (+3) | fairly recent (2023) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_901084039673953" data-source="FB" data-title="Intense Carbine Carbon MTB" data-url="https://www.facebook.com/marketplace/item/901084039673953/" data-score="4.5" data-recent="1780790400" data-discovered="1780866617" data-fit="fit-unknown" data-search="intense carbine carbon mtb costa mesa fb_901084039673953 fb  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/901084039673953/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/715650952_4478876688998237_4326954307033008841_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=kDR-2EpPOdAQ7kNvwHlc8m0&amp;_nc_oc=AdrsjQ2pf5mopK78KApIdEnsqXyNl8ko9SX44P2JZsYGbXbsDgNkP5A1HFCNIw8iOCg&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=9K1ZQ4XHlZ6eBPKcREYVQA&amp;_nc_ss=7b2a8&amp;oh=00_Af92PM2XFw-WuoXABPa2QUUb2TnT1dFbson6P2Io0bLmwQ&amp;oe=6A2BC8D6" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/901084039673953/" target="_blank" rel="noopener">Intense Carbine Carbon MTB</a></div>
+      <div class="facts"><span class="price">$2,000</span><span>Costa Mesa</span><span>listed today</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Intense) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 5m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_2072709087004355" data-source="FB" data-title="Santa Cruz Hightower LARGE" data-url="https://www.facebook.com/marketplace/item/2072709087004355/" data-score="4.5" data-recent="1780704000" data-discovered="1780866528" data-fit="fit-good" data-search="santa cruz hightower large tustin fb_2072709087004355 fb l new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/2072709087004355/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/717440028_2464125650718564_8445339131644710214_n.jpg?stp=c0.153.261.261a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=W0fBwTXAku8Q7kNvwHqYIE7&amp;_nc_oc=AdoEOsroL2qFkunrfPBkgdST9pcLe2QoK7Xzf6SslAiVGQLEE-I2-bLTRjNYXtPIwX8&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=Q5jMZcdYwYJ0S6L9HLWWYg&amp;_nc_ss=7b2a8&amp;oh=00_Af8uqlo-LTZSDVJ6NRSqP4xnI9GW-_hhVBGHjozPuOJVug&amp;oe=6A2BBE30" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/2072709087004355/" target="_blank" rel="noopener">Santa Cruz Hightower LARGE</a></div>
+      <div class="facts"><span class="price">$3,000</span><span>Tustin</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 6m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_2372515376575027" data-source="FB" data-title="Intense spider C mtb carbon fiber" data-url="https://www.facebook.com/marketplace/item/2372515376575027/" data-score="4.5" data-recent="1780704000" data-discovered="1780866474" data-fit="fit-unknown" data-search="intense spider c mtb carbon fiber lake forest fb_2372515376575027 fb  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/2372515376575027/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/718632088_1354946706491974_2222326574929936336_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=pRoCYnW9GLMQ7kNvwHxDISB&amp;_nc_oc=Adp8-puUBxp6dxDwU_T624krIsKO3y_0juesCCKY_b8foS_3ablaU5eykevNAWLEPjY&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=iCRy7CXZsonsRUvGy3yJwA&amp;_nc_ss=7b2a8&amp;oh=00_Af9qNT1zd5Cc2BHJHYvFGUSEY9JrTYbxXLCEKZmtRovy1Q&amp;oe=6A2BC8D6" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/2372515376575027/" target="_blank" rel="noopener">Intense spider C mtb carbon fiber</a></div>
+      <div class="facts"><span class="price">$1,000</span><span>Lake Forest</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Intense) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (bike-context) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 7m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_983722817808424" data-source="FB" data-title="YT JEFFSY Core 2 Alloy 27.5" data-url="https://www.facebook.com/marketplace/item/983722817808424/" data-score="4.5" data-recent="1780790400" data-discovered="1780866474" data-fit="fit-unknown" data-search="yt jeffsy core 2 alloy 27.5 foothill ranch fb_983722817808424 fb  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/983722817808424/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/717440382_1644769453487747_2843788090804742538_n.jpg?stp=c0.43.261.261a_dst-jpg_p261x260_tt6&amp;_nc_cat=110&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=FNf9sBJsKTwQ7kNvwGpBZAy&amp;_nc_oc=AdohhLAFs4-dC53acy6AwOJ-DOC_K_Ouyp-aFfUYt9RA-cX1f2pFhzgMk8W9gqNbHes&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=dXWxaZEvpgUd75vg5mJwRA&amp;_nc_ss=7b2a8&amp;oh=00_Af8CrfMgQzpnwyGcHRYb0654-B3kpyowPUG0vYHuG4i4ew&amp;oe=6A2B9685" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/983722817808424/" target="_blank" rel="noopener">YT JEFFSY Core 2 Alloy 27.5</a></div>
+      <div class="facts"><span class="price">$2,100</span><span>Foothill Ranch</span><span>listed today</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Yt) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 7m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_2138989520233047" data-source="FB" data-title="Intense spider CARBON bike" data-url="https://www.facebook.com/marketplace/item/2138989520233047/" data-score="4.5" data-recent="1780617600" data-discovered="1780800158" data-fit="fit-unknown" data-search="intense spider carbon bike lake forest fb_2138989520233047 fb  new">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/2138989520233047/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/715512038_1534112051394509_7570728532541336711_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=K_lhj58E8-QQ7kNvwE19IYa&amp;_nc_oc=AdqhAh1_X-fylF47ue3dFo5kJciaC4zvSXMBwMrLTDg-K9NBtl2OZv8omIkiaZ3qrlk&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=c21oLwR7QbPZMT9plGlJig&amp;_nc_ss=7b2a8&amp;oh=00_Af-Eqz8ACMRdKAxjBk8vP5H7qvUju2V2NzExRTTh-YlR5g&amp;oe=6A2AA59B" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-new">New</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/2138989520233047/" target="_blank" rel="noopener">Intense spider CARBON bike</a></div>
+      <div class="facts"><span class="price">$1,100</span><span>Lake Forest</span><span>listed 2d ago</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Intense) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (bike-context) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">first seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article></div></section><section data-section="review"><div class="section-head"><div><h2>Needs review <span class="count">8</span></h2><div class="section-meta">Deep-review queue, before spending review budget.</div></div></div><div class="grid"><article class="card" data-id="ou_e2c311a9-a7bb-3349-aefe-ce4734774d8d" data-source="OU" data-title="2022 Specialized Stumpjumper Carbon Custom" data-url="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" data-score="12.5" data-recent="1780617600" data-discovered="1780864238" data-fit="fit-ok" data-search="2022 specialized stumpjumper carbon custom mission viejo ou_e2c311a9-a7bb-3349-aefe-ce4734774d8d ou m review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" target="_blank" rel="noopener"><img src="https://images.offerup.com/fYG0QfrxIM8dww-vmDsHzT3Qiao=/333x250/b421/b421762ac5eb4cbe8899779f7bb2ea62.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/e2c311a9-a7bb-3349-aefe-ce4734774d8d" target="_blank" rel="noopener">2022 Specialized Stumpjumper Carbon Custom</a></div>
+      <div class="facts"><span class="price">$2200</span><span>Mission Viejo</span><span>listed 2d ago</span><span class="score ">score 12.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | 11 photos (+1) | premium drivetrain (XX1) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 43m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-source="OU" data-title="🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!" data-url="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-score="9.5" data-recent="1720569600" data-discovered="1778691735" data-fit="fit-good" data-search="🚴‍♂️ cannondale habit full suspension mountain bike – like new! costa mesa ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e ou l review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener"><img src="https://images.offerup.com/VxUI1tvGjEPAc8dipCbJptVCKR4=/250x250/bfd2/bfd21405a25541eebfdfcaf2107d69d9.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener">🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!</a></div>
+      <div class="facts"><span class="price">$1500</span><span>Costa Mesa</span><span>listed 23mo ago</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Cannondale) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | thorough description (1497 chars) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 2026-05-19</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_6209f070-46c7-30f6-b053-c2fa6e632bf6" data-source="OU" data-title="2024 Santa Cruz High Tower Cr" data-url="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" data-score="9.5" data-recent="1752278400" data-discovered="1778690331" data-fit="fit-unknown" data-search="2024 santa cruz high tower cr san clemente ou_6209f070-46c7-30f6-b053-c2fa6e632bf6 ou  review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener"><img src="https://images.offerup.com/XptN-iT3MxCq3mdUTMGVrFd632A=/250x250/5442/544289f3800148e2ba67fbddae71cefe.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener">2024 Santa Cruz High Tower Cr</a></div>
+      <div class="facts"><span class="price">$3000</span><span>San Clemente</span><span>listed 11mo ago</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | recent model year (2024) (+5) | premium suspension (fox factory) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 13d ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_0bceb433-83be-3b26-a6e1-d6e2c0f8f914" data-source="OU" data-title="Santa Cruz Tallboy 29 XE Carbon C Mountain Bike - Medium" data-url="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" data-score="9" data-recent="1761177600" data-discovered="1778691735" data-fit="fit-ok" data-search="santa cruz tallboy 29 xe carbon c mountain bike - medium irvine ou_0bceb433-83be-3b26-a6e1-d6e2c0f8f914 ou m review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" target="_blank" rel="noopener"><img src="https://images.offerup.com/tusHuKgDUJalObFaF1nzM1VponE=/250x250/3ec3/3ec3342f3ce84a1db7758e903d87e03f.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" target="_blank" rel="noopener">Santa Cruz Tallboy 29 XE Carbon C Mountain Bike - Medium</a></div>
+      <div class="facts"><span class="price">$1800</span><span>Irvine</span><span>listed 8mo ago</span><span class="score warn">score 9</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | no model year in title (-0.5) | midrange drivetrain (GX EAGLE) (+0.5) | service history (tune up) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">queued 5d ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1671615247216404" data-source="FB" data-title="2022 Giant Talon 2 29er MTB Size SMALL 1x9 Speed" data-url="https://www.facebook.com/marketplace/item/1671615247216404/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-bad" data-search="2022 giant talon 2 29er mtb size small 1x9 speed mission viejo fb_1671615247216404 fb s review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1671615247216404/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/718160782_2216625605770032_8319002614046157776_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=104&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=fAPMI8WXywsQ7kNvwEbA1vy&amp;_nc_oc=Ado4Q5qpeOvyHqkQmSC9Xhr0BWlY2wWcDKYeZonbdqu45IRC6tySGOghObkc3KBO1LE&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af-yE1rEfyCCRfvcvLxqtFbfmBLmPsvVQrfp1vnPvna61A&amp;oe=6A2A9682" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-bad">Small</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1671615247216404/" target="_blank" rel="noopener">2022 Giant Talon 2 29er MTB Size SMALL 1x9 Speed</a></div>
+      <div class="facts"><span class="price">$525</span><span>Mission Viejo</span><span>listed 1d ago</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Giant) (+3) | fairly recent (2022) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_26954691327523392" data-source="FB" data-title="2022 Cannondale Trail 5 29er MTB Shimano DEORE 1x10 ROCKSHOX Fork Size LARGE" data-url="https://www.facebook.com/marketplace/item/26954691327523392/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-good" data-search="2022 cannondale trail 5 29er mtb shimano deore 1x10 rockshox fork size large mission viejo fb_26954691327523392 fb l review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/26954691327523392/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/716353432_4539677746279591_6438785671977370881_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=107&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=wh4FP6GBQ3QQ7kNvwFMH1ys&amp;_nc_oc=AdoE7oHYvsqE_XSEFZ6msTuDuXzv2ar_83Sk8fS9J_c2M-UxDWhxf0xffmaVdEPwn5A&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af8YNA8o9AItgaKtMG37el8XCEf4XUBRs5hGWtZCiIUxGA&amp;oe=6A2A956F" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/26954691327523392/" target="_blank" rel="noopener">2022 Cannondale Trail 5 29er MTB Shimano DEORE 1x10 ROCKSHOX Fork Size LARGE</a></div>
+      <div class="facts"><span class="price">$575</span><span>Mission Viejo</span><span>listed 1d ago</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Cannondale) (+3) | fairly recent (2022) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1726242702145242" data-source="FB" data-title="2023/2024 Trek Allant+ 7 Lowstep – Size M – Like New (Under 250 Miles)" data-url="https://www.facebook.com/marketplace/item/1726242702145242/" data-score="5.5" data-recent="1780704000" data-discovered="1780800050" data-fit="fit-unknown" data-search="2023/2024 trek allant+ 7 lowstep – size m – like new (under 250 miles) irvine fb_1726242702145242 fb  review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1726242702145242/" target="_blank" rel="noopener"><img src="https://scontent-lax3-1.xx.fbcdn.net/v/t39.84726-6/715376274_1659629625147219_516118581467011206_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&amp;_nc_cat=110&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=HGEp37W8ujMQ7kNvwEIOLO-&amp;_nc_oc=AdphORyDpx_4qVMACchWPjPGEl3vTXPm60p15lS1aZety1xeZPhYIRqd4aUiB0vyfcA&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-1.xx&amp;_nc_gid=yBDB1knXcpfVrW5mQ7nUdw&amp;_nc_ss=7b2a8&amp;oh=00_Af840nAciqtNS9d68xR_wZNywxjgcUzqws5tNEYFn_FgEw&amp;oe=6A2BC333" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1726242702145242/" target="_blank" rel="noopener">2023/2024 Trek Allant+ 7 Lowstep – Size M – Like New (Under 250 Miles)</a></div>
+      <div class="facts"><span class="price">$1,750</span><span>Irvine</span><span>listed 1d ago</span><span class="score bad">score 5.5</span></div>
+      
+      <div class="reasons">premium brand (Trek) (+3) | fairly recent (2023) (+2.5)</div>
+      <div class="card-footer">
+        <span class="seen">queued 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1546691653748058" data-source="FB" data-title="Devinci Spartan Mountain Bike" data-url="https://www.facebook.com/marketplace/item/1546691653748058/" data-score="4.5" data-recent="1780704000" data-discovered="1780787080" data-fit="fit-unknown" data-search="devinci spartan mountain bike mission viejo fb_1546691653748058 fb  review">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1546691653748058/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/710799640_27104525172541678_3272135825091103197_n.jpg?stp=c0.43.261.261a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=Tl47quH-QDEQ7kNvwGCW3sQ&amp;_nc_oc=AdrHp6mEFcuZ0EzOaguRruT-JGos70rKAgWylV2iiuYOujIT1ijy92GF6HaRJE7FYY8&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af_s05NSurCseVOGyMnzLBVIL3ahyaMPTlDcmA9ohS2oIQ&amp;oe=6A2AA9BE" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-review">Review</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1546691653748058/" target="_blank" rel="noopener">Devinci Spartan Mountain Bike</a></div>
+      <div class="facts"><span class="price">$1,760</span><span>Mission Viejo</span><span>listed 1d ago</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Devinci) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">queued 22h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article></div></section><section data-section="shortlist"><div class="section-head"><div><h2>Active shortlist <span class="count">22</span></h2><div class="section-meta">Pinkbike: socal-60, score &gt;= 8.0, top 10; OfferUp: socal-25, score &gt;= 3.5, top 5; Facebook: socal-25, score &gt;= 3.5, top 5; &lt;= $3000, seen &lt;= 14d</div></div></div><div class="grid"><article class="card" data-id="ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-source="OU" data-title="Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB" data-url="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" data-score="13" data-recent="1762041600" data-discovered="1778522936" data-fit="fit-ok" data-search="turner rfx v4.0, size - m, full suspension carbon enduro mtb lake forest ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778 ou m pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener"><img src="https://images.offerup.com/kQw4mc9JqBOaQjPA-uEbbZm6iqU=/250x250/fd6d/fd6d58fa13af4740a71035692516bcb7.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778" target="_blank" rel="noopener">Turner RFX V4.0, Size - M, Full suspension carbon enduro MTB</a></div>
+      <div class="facts"><span class="price">$2250</span><span>Lake Forest</span><span>listed 7mo ago</span><span>OfferUp</span><span class="score ">score 13</span></div>
+      
+      <div class="reasons">premium brand (Turner) (+3) | no model year in title (-0.5) | premium drivetrain (X01) (+1.5) | premium suspension (fox factory) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_f07c1034-1528-3cdc-9d52-c4237cc34598" data-source="OU" data-title="Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB" data-url="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" data-score="10" data-recent="1773446400" data-discovered="1778691870" data-fit="fit-ok" data-search="canyon grand on 7 e-bike, size - m, 2025 full suspension carbon e-mtb dana point ou_f07c1034-1528-3cdc-9d52-c4237cc34598 ou m pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener"><img src="https://images.offerup.com/ykY7zG3vitk5HZ5DqF4MRyZzQNc=/250x250/5f03/5f03e7fd3b214ad18e3ccb4b5cd9c7d0.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-ok">Medium ok</span>
+        <span class="badge status-user-good" data-user-badge>GOOD</span>
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598" target="_blank" rel="noopener">Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB</a></div>
+      <div class="facts"><span class="price">$2550</span><span>Dana Point</span><span>listed 3mo ago</span><span>OfferUp</span><span class="score warn">score 10</span></div>
+      
+      <div class="reasons">premium brand (Canyon) (+3) | recent model year (2025) (+5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 2026-05-13</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-source="OU" data-title="🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!" data-url="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" data-score="9.5" data-recent="1720569600" data-discovered="1778691735" data-fit="fit-good" data-search="🚴‍♂️ cannondale habit full suspension mountain bike – like new! costa mesa ou_d894f33e-3e8b-3fb1-a3c7-d74cef96939e ou l candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener"><img src="https://images.offerup.com/VxUI1tvGjEPAc8dipCbJptVCKR4=/250x250/bfd2/bfd21405a25541eebfdfcaf2107d69d9.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/d894f33e-3e8b-3fb1-a3c7-d74cef96939e" target="_blank" rel="noopener">🚴‍♂️ Cannondale Habit Full Suspension Mountain Bike – Like New!</a></div>
+      <div class="facts"><span class="price">$1500</span><span>Costa Mesa</span><span>listed 23mo ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Cannondale) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | thorough description (1497 chars) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 43m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-source="OU" data-title="Cannondale Jekyll 2 (2022)" data-url="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" data-score="9.5" data-recent="1767657600" data-discovered="1778522936" data-fit="fit-good" data-search="cannondale jekyll 2 (2022) newport beach ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8 ou l watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener"><img src="https://images.offerup.com/Dz-50i2ZFnbhqjFJMHoWdaic86w=/250x250/9362/9362db8efd5f41d1a8a925762acc3bfb.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/1e112ed4-d0db-3672-93cb-8d913fabe7f8" target="_blank" rel="noopener">Cannondale Jekyll 2 (2022)</a></div>
+      <div class="facts"><span class="price">$2000</span><span>Newport Beach</span><span>listed 5mo ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Cannondale) (+3) | fairly recent (2022) (+2.5) | premium wheels (enve) (+1) | detailed description (530 chars) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_d1027a80-7379-3f1c-ab47-f6c4744c47f1" data-source="OU" data-title="YT JEFFSY 2022 27.5 Medium" data-url="https://offerup.com/item/detail/d1027a80-7379-3f1c-ab47-f6c4744c47f1" data-score="9.5" data-recent="1780185600" data-discovered="1780360964" data-fit="fit-ok" data-search="yt jeffsy 2022 27.5 medium lake forest ou_d1027a80-7379-3f1c-ab47-f6c4744c47f1 ou m watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/d1027a80-7379-3f1c-ab47-f6c4744c47f1" target="_blank" rel="noopener"><img src="https://images.offerup.com/x4YsoTxDA18Fphk8AkHuHSOoWFc=/250x333/944e/944e3783d2c3406caa76355b89de7562.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/d1027a80-7379-3f1c-ab47-f6c4744c47f1" target="_blank" rel="noopener">YT JEFFSY 2022 27.5 Medium</a></div>
+      <div class="facts"><span class="price">$2100</span><span>Lake Forest</span><span>listed 7d ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Yt) (+3) | fairly recent (2022) (+2.5) | 10 photos (+1) | detailed description (532 chars) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_6209f070-46c7-30f6-b053-c2fa6e632bf6" data-source="OU" data-title="2024 Santa Cruz High Tower Cr" data-url="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" data-score="9.5" data-recent="1752278400" data-discovered="1778690331" data-fit="fit-unknown" data-search="2024 santa cruz high tower cr san clemente ou_6209f070-46c7-30f6-b053-c2fa6e632bf6 ou  candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener"><img src="https://images.offerup.com/XptN-iT3MxCq3mdUTMGVrFd632A=/250x250/5442/544289f3800148e2ba67fbddae71cefe.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/6209f070-46c7-30f6-b053-c2fa6e632bf6" target="_blank" rel="noopener">2024 Santa Cruz High Tower Cr</a></div>
+      <div class="facts"><span class="price">$3000</span><span>San Clemente</span><span>listed 11mo ago</span><span>OfferUp</span><span class="score warn">score 9.5</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | recent model year (2024) (+5) | premium suspension (fox factory) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 3d ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_0bceb433-83be-3b26-a6e1-d6e2c0f8f914" data-source="OU" data-title="Santa Cruz Tallboy 29 XE Carbon C Mountain Bike - Medium" data-url="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" data-score="9" data-recent="1761177600" data-discovered="1778691735" data-fit="fit-ok" data-search="santa cruz tallboy 29 xe carbon c mountain bike - medium irvine ou_0bceb433-83be-3b26-a6e1-d6e2c0f8f914 ou m candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" target="_blank" rel="noopener"><img src="https://images.offerup.com/tusHuKgDUJalObFaF1nzM1VponE=/250x250/3ec3/3ec3342f3ce84a1db7758e903d87e03f.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/0bceb433-83be-3b26-a6e1-d6e2c0f8f914" target="_blank" rel="noopener">Santa Cruz Tallboy 29 XE Carbon C Mountain Bike - Medium</a></div>
+      <div class="facts"><span class="price">$1800</span><span>Irvine</span><span>listed 8mo ago</span><span>OfferUp</span><span class="score warn">score 9</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | no model year in title (-0.5) | midrange drivetrain (GX EAGLE) (+0.5) | service history (tune up) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 3d ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b" data-source="OU" data-title="Specialized Stumpjumper EVO Comp, Size - S3, Carbon All-Mountain Bike" data-url="https://offerup.com/item/detail/7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b" data-score="8.5" data-recent="1778889600" data-discovered="1779064487" data-fit="fit-unknown" data-search="specialized stumpjumper evo comp, size - s3, carbon all-mountain bike san juan capistrano ou_7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b ou  pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b" target="_blank" rel="noopener"><img src="https://images.offerup.com/0xkQz-fUE2ilWS3GxLdbFQBc_Z0=/375x250/f20b/f20b48ac069647eb85d667d052cca5b1.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b" target="_blank" rel="noopener">Specialized Stumpjumper EVO Comp, Size - S3, Carbon All-Mountain Bike</a></div>
+      <div class="facts"><span class="price">$2950</span><span>San Juan Capistrano</span><span>listed 3w ago</span><span>OfferUp</span><span class="score warn">score 8.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | midrange drivetrain (SLX) (+0.5) | thorough description (2106 chars) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 44m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_63577322-d6aa-39e6-b796-9ad4674a12df" data-source="OU" data-title="Santa Cruz Nomad C Carbon Mountain Bike – GX Eagle / RockShox – $1,750" data-url="https://offerup.com/item/detail/63577322-d6aa-39e6-b796-9ad4674a12df" data-score="8" data-recent="1779580800" data-discovered="1779740585" data-fit="fit-unknown" data-search="santa cruz nomad c carbon mountain bike – gx eagle / rockshox – $1,750 laguna beach ou_63577322-d6aa-39e6-b796-9ad4674a12df ou  candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/63577322-d6aa-39e6-b796-9ad4674a12df" target="_blank" rel="noopener"><img src="https://images.offerup.com/9Oj9gtNKohneN6DuqmeqFOmM1Xw=/333x250/4a0a/4a0a304b50c7474ea2c9256f2703215a.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/63577322-d6aa-39e6-b796-9ad4674a12df" target="_blank" rel="noopener">Santa Cruz Nomad C Carbon Mountain Bike – GX Eagle / RockShox – $1,750</a></div>
+      <div class="facts"><span class="price">$1750</span><span>Laguna Beach</span><span>listed 2w ago</span><span>OfferUp</span><span class="score warn">score 8</span></div>
+      
+      <div class="reasons">premium brand (Santa Cruz) (+3) | no model year in title (-0.5) | 9 photos (+1) | midrange drivetrain (GX EAGLE) (+0.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_65002839-b970-3075-918f-21d15fcb7ce5" data-source="OU" data-title="Yeti SB 5.5 Turq large carbon frame &amp; wheels immaculate" data-url="https://offerup.com/item/detail/65002839-b970-3075-918f-21d15fcb7ce5" data-score="7.75" data-recent="1778976000" data-discovered="1779154078" data-fit="fit-good" data-search="yeti sb 5.5 turq large carbon frame &amp; wheels immaculate aliso viejo ou_65002839-b970-3075-918f-21d15fcb7ce5 ou l candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/65002839-b970-3075-918f-21d15fcb7ce5" target="_blank" rel="noopener"><img src="https://images.offerup.com/_WlPBe1l6uJ6Tgy-6Mi2wxDMvAQ=/333x250/45c2/45c29e25ac3e43aa9f161ea24405f282.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/65002839-b970-3075-918f-21d15fcb7ce5" target="_blank" rel="noopener">Yeti SB 5.5 Turq large carbon frame &amp; wheels immaculate</a></div>
+      <div class="facts"><span class="price">$2100</span><span>Aliso Viejo</span><span>listed 3w ago</span><span>OfferUp</span><span class="score bad">score 7.75</span></div>
+      
+      <div class="reasons">premium brand (Yeti) (+3) | no model year in title (-0.5) | midrange drivetrain (XT) (+0.5) | premium suspension (fox factory) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_419cf1e7-abcf-3176-8e76-57e9018e5ea8" data-source="OU" data-title="Specialized S-Works Stumpjumper FSR — Carbon Full Suspension MTB" data-url="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" data-score="7.5" data-recent="1773878400" data-discovered="1778691735" data-fit="fit-ok" data-search="specialized s-works stumpjumper fsr — carbon full suspension mtb newport beach ou_419cf1e7-abcf-3176-8e76-57e9018e5ea8 ou m candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" target="_blank" rel="noopener"><img src="https://images.offerup.com/517A49em6npPYeQAaxvZzt6z-ww=/250x250/6b9f/6b9ffe7d483747b9ad24b10f3a973533.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/419cf1e7-abcf-3176-8e76-57e9018e5ea8" target="_blank" rel="noopener">Specialized S-Works Stumpjumper FSR — Carbon Full Suspension MTB</a></div>
+      <div class="facts"><span class="price">$1200</span><span>Newport Beach</span><span>listed 3mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | 7 photos (+0.5) | premium drivetrain (XTR) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 44m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_163dd107-96e4-35d6-9683-db18cc0aa2db" data-source="OU" data-title="Trek Fuel Ex Project One Factory Racing-$1500 OBO" data-url="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" data-score="7.5" data-recent="1757721600" data-discovered="1778691735" data-fit="fit-unknown" data-search="trek fuel ex project one factory racing-$1500 obo irvine ou_163dd107-96e4-35d6-9683-db18cc0aa2db ou  watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" target="_blank" rel="noopener"><img src="https://images.offerup.com/9DmkhdPoiZ2i5EXjJpkRe-fykGs=/250x250/4872/48727b94f12a4b63b7b32cf6895e7c16.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/163dd107-96e4-35d6-9683-db18cc0aa2db" target="_blank" rel="noopener">Trek Fuel Ex Project One Factory Racing-$1500 OBO</a></div>
+      <div class="facts"><span class="price">$1500</span><span>Irvine</span><span>listed 9mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Trek) (+3) | no model year in title (-0.5) | midrange drivetrain (XT) (+0.5) | premium suspension (kashima) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_982727c9-d582-309a-bbce-4a3986aa4dca" data-source="OU" data-title="2022 Alloy Stunt Jumper" data-url="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" data-score="7.5" data-recent="1731628800" data-discovered="1778522936" data-fit="fit-unknown" data-search="2022 alloy stunt jumper mission viejo ou_982727c9-d582-309a-bbce-4a3986aa4dca ou  candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" target="_blank" rel="noopener"><img src="https://images.offerup.com/WRyrzgN3IVS2TTCu27RXboMqrcM=/250x250/6fa0/6fa0fbf02008443184931d2570e63e38.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/982727c9-d582-309a-bbce-4a3986aa4dca" target="_blank" rel="noopener">2022 Alloy Stunt Jumper</a></div>
+      <div class="facts"><span class="price">$1250</span><span>Mission Viejo</span><span>listed 19mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | fairly recent (2022) (+2.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_21125aa1-3e34-366f-9e8e-2e42d7fca356" data-source="OU" data-title="2023 YT Jeffsy Core 3" data-url="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" data-score="7.5" data-recent="1725408000" data-discovered="1778522936" data-fit="fit-unknown" data-search="2023 yt jeffsy core 3 mission viejo ou_21125aa1-3e34-366f-9e8e-2e42d7fca356 ou  pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" target="_blank" rel="noopener"><img src="https://images.offerup.com/ldhTAeJ5LFG3c2c0xUylry2H1Yc=/250x250/ca3d/ca3d684c9b414541a24aa11d0873afbb.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/21125aa1-3e34-366f-9e8e-2e42d7fca356" target="_blank" rel="noopener">2023 YT Jeffsy Core 3</a></div>
+      <div class="facts"><span class="price">$2800</span><span>Mission Viejo</span><span>listed 21mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Yt) (+3) | fairly recent (2023) (+2.5) | at corpus median (corpus median $2400 across 3 listings, listing 116%) (+0) | OfferUp complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_3f92362b-0bf1-3526-8ac7-a09134f8a390" data-source="OU" data-title="2023 Giant E-bike ( Medium)" data-url="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" data-score="7.5" data-recent="1737676800" data-discovered="1778690331" data-fit="fit-ok" data-search="2023 giant e-bike ( medium) san clemente ou_3f92362b-0bf1-3526-8ac7-a09134f8a390 ou m candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" target="_blank" rel="noopener"><img src="https://images.offerup.com/KCYz0hVMdN1thL_4hAbRNUIMU5g=/250x250/5b2c/5b2c39e3576c4bdd8d9745afae4dac36.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/3f92362b-0bf1-3526-8ac7-a09134f8a390" target="_blank" rel="noopener">2023 Giant E-bike ( Medium)</a></div>
+      <div class="facts"><span class="price">$2900</span><span>San Clemente</span><span>listed 17mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      
+      <div class="reasons">premium brand (Giant) (+3) | fairly recent (2023) (+2.5) | OfferUp complete-bike relevance (bike-context) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 2026-05-13</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327" data-source="OU" data-title="Yt Jeffsy Core 3 2023" data-url="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" data-score="7.5" data-recent="1762732800" data-discovered="1778690331" data-fit="fit-unknown" data-search="yt jeffsy core 3 2023 ladera ranch ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327 ou  watch">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" target="_blank" rel="noopener"><img src="https://images.offerup.com/kUyTnvGQaGSszzVthUwVq1-RRBA=/250x250/f6a6/f6a63e7842de426a82a7867fd0c3d4a4.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-watch">WATCH</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/fbc8835f-0a8c-3c52-8a17-1b3c79c25327" target="_blank" rel="noopener">Yt Jeffsy Core 3 2023</a></div>
+      <div class="facts"><span class="price">$2400</span><span>Ladera Ranch</span><span>listed 7mo ago</span><span>OfferUp</span><span class="score bad">score 7.5</span></div>
+      <div class="risk"><span>crashed</span></div>
+      <div class="reasons">premium brand (Yt) (+3) | fairly recent (2023) (+2.5) | OfferUp complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 2026-05-13</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" data-source="OU" data-title="Mtb Gian Trance 27.5” Maestro Up Grade " data-url="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" data-score="7" data-recent="1774742400" data-discovered="1778691870" data-fit="fit-unknown" data-search="mtb gian trance 27.5” maestro up grade  aliso viejo ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d ou  pass">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" target="_blank" rel="noopener"><img src="https://images.offerup.com/HusCushCfMY40_tIaiye7JuSsNY=/250x250/912e/912e13a158e74fdd8764b2ce7160a5cf.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-pass">PASS</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d" target="_blank" rel="noopener">Mtb Gian Trance 27.5” Maestro Up Grade </a></div>
+      <div class="facts"><span class="price">$1850</span><span>Aliso Viejo</span><span>listed 2mo ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+      
+      <div class="reasons">premium brand (Giant) (+3) | no model year in title (-0.5) | premium drivetrain (XTR) (+1.5) | detailed description (530 chars) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 43m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_ec8aeace-6aaa-384c-9cb8-5c0e5ff5be64" data-source="OU" data-title="2019 Ibis Ripley LS V3" data-url="https://offerup.com/item/detail/ec8aeace-6aaa-384c-9cb8-5c0e5ff5be64" data-score="7" data-recent="1773964800" data-discovered="1778691735" data-fit="fit-good" data-search="2019 ibis ripley ls v3 tustin ou_ec8aeace-6aaa-384c-9cb8-5c0e5ff5be64 ou l candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/ec8aeace-6aaa-384c-9cb8-5c0e5ff5be64" target="_blank" rel="noopener"><img src="https://images.offerup.com/AcP2iXtTSlC-DdtHNtT4RC1ynIs=/250x250/1f2e/1f2e76d715264500b746bfc96abddeec.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-good">Large fit</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/ec8aeace-6aaa-384c-9cb8-5c0e5ff5be64" target="_blank" rel="noopener">2019 Ibis Ripley LS V3</a></div>
+      <div class="facts"><span class="price">$1750</span><span>Tustin</span><span>listed 3mo ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+      <div class="risk"><span>7y old</span></div>
+      <div class="reasons">premium brand (Ibis) (+3) | older bike (2019, 7y old) (-2) | premium drivetrain (XTR) (+1.5) | premium suspension (pike ultimate) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_723da482-b534-3276-9447-7064f834a0fa" data-source="OU" data-title="Pivot MACH 6 Mountain Bike" data-url="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" data-score="7" data-recent="1749081600" data-discovered="1778522936" data-fit="fit-ok" data-search="pivot mach 6 mountain bike laguna beach ou_723da482-b534-3276-9447-7064f834a0fa ou m candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" target="_blank" rel="noopener"><img src="https://images.offerup.com/KNJBmJuXI9uGn5HY03tF94vO4kY=/250x250/602c/602c49eb6bba410b8dd68961e3846f51.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-ok">Medium ok</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/723da482-b534-3276-9447-7064f834a0fa" target="_blank" rel="noopener">Pivot MACH 6 Mountain Bike</a></div>
+      <div class="facts"><span class="price">$3000</span><span>Laguna Beach</span><span>listed 12mo ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+      
+      <div class="reasons">premium brand (Pivot) (+3) | no model year in title (-0.5) | premium suspension (fox factory) (+1.5) | detailed description (714 chars) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" data-source="OU" data-title="Santa Cruz Hightower Carbon - S Kit - 2019" data-url="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" data-score="7" data-recent="1747526400" data-discovered="1778691735" data-fit="fit-unknown" data-search="santa cruz hightower carbon - s kit - 2019 tustin ou_a2444fd7-49ae-30c1-bd42-5333a4a7d6c0 ou xs candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" target="_blank" rel="noopener"><img src="https://images.offerup.com/KOXH3zRjn5PA6sd9V16104tLev8=/250x250/7912/79127cb53c794b92ba97fd11a4e403b1.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/a2444fd7-49ae-30c1-bd42-5333a4a7d6c0" target="_blank" rel="noopener">Santa Cruz Hightower Carbon - S Kit - 2019</a></div>
+      <div class="facts"><span class="price">$3000</span><span>Tustin</span><span>listed 13mo ago</span><span>OfferUp</span><span class="score bad">score 7</span></div>
+      <div class="risk"><span>7y old</span></div>
+      <div class="reasons">premium brand (Santa Cruz) (+3) | older bike (2019, 7y old) (-2) | premium drivetrain (XTR) (+1.5) | premium wheels (reserve carbon) (+1)</div>
+      <div class="card-footer">
+        <span class="seen">seen 45m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="ou_b3d75277-057d-3e20-af1b-618eb578e2ac" data-source="OU" data-title="Specialized M2 26” Stumpjumper 1998" data-url="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" data-score="6.75" data-recent="1764720000" data-discovered="1778910806" data-fit="fit-unknown" data-search="specialized m2 26” stumpjumper 1998 costa mesa ou_b3d75277-057d-3e20-af1b-618eb578e2ac ou  candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" target="_blank" rel="noopener"><img src="https://images.offerup.com/mdcCywGoqH4lombG3nBKOjaVL5k=/250x250/9348/9348b3a7a50849cfa8e3d50fb83f250e.jpg" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-ou">OU</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://offerup.com/item/detail/b3d75277-057d-3e20-af1b-618eb578e2ac" target="_blank" rel="noopener">Specialized M2 26” Stumpjumper 1998</a></div>
+      <div class="facts"><span class="price">$900</span><span>Costa Mesa</span><span>listed 6mo ago</span><span>OfferUp</span><span class="score bad">score 6.75</span></div>
+      
+      <div class="reasons">premium brand (Specialized) (+3) | no model year in title (-0.5) | 9 photos (+1) | premium drivetrain (XTR) (+1.5)</div>
+      <div class="card-footer">
+        <span class="seen">seen 44m ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article><article class="card" data-id="fb_1546691653748058" data-source="FB" data-title="Devinci Spartan Mountain Bike" data-url="https://www.facebook.com/marketplace/item/1546691653748058/" data-score="4.5" data-recent="1780704000" data-discovered="1780787080" data-fit="fit-unknown" data-search="devinci spartan mountain bike mission viejo fb_1546691653748058 fb  candidate">
+  <div class="card-delete" aria-hidden="true"><span class="card-delete-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Delete</span></div>
+  <div class="card-surface">
+    <a class="thumb" href="https://www.facebook.com/marketplace/item/1546691653748058/" target="_blank" rel="noopener"><img src="https://scontent-lax3-2.xx.fbcdn.net/v/t39.84726-6/710799640_27104525172541678_3272135825091103197_n.jpg?stp=c0.43.261.261a_dst-jpg_p261x260_tt6&amp;_nc_cat=106&amp;ccb=1-7&amp;_nc_sid=92e707&amp;_nc_ohc=Tl47quH-QDEQ7kNvwGCW3sQ&amp;_nc_oc=AdrHp6mEFcuZ0EzOaguRruT-JGos70rKAgWylV2iiuYOujIT1ijy92GF6HaRJE7FYY8&amp;_nc_zt=14&amp;_nc_ht=scontent-lax3-2.xx&amp;_nc_gid=zzbLE0kpfGuOnOLKhorDGg&amp;_nc_ss=7b2a8&amp;oh=00_Af_s05NSurCseVOGyMnzLBVIL3ahyaMPTlDcmA9ohS2oIQ&amp;oe=6A2AA9BE" loading="lazy" alt=""></a>
+    <div class="body">
+      <div class="topline">
+        <span class="badge source-fb">FB</span>
+        <span class="badge status-candidate">Candidate</span>
+        <span class="badge fit-unknown">Size unknown</span>
+        
+      </div>
+      <div class="title"><a href="https://www.facebook.com/marketplace/item/1546691653748058/" target="_blank" rel="noopener">Devinci Spartan Mountain Bike</a></div>
+      <div class="facts"><span class="price">$1,760</span><span>Mission Viejo</span><span>listed 1d ago</span><span>Facebook Marketplace</span><span class="score bad">score 4.5</span></div>
+      
+      <div class="reasons">premium brand (Devinci) (+3) | no model year in title (-0.5) | Facebook complete-bike relevance (named model) (+2)</div>
+      <div class="card-footer">
+        <span class="seen">seen 18h ago</span>
+        <span class="actions">
+          <button class="action" type="button" data-open-review>Add review</button>
+          <button class="action" type="button" data-open-note>Note</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</article></div></section>
+  </main>
+</div>
+<div class="modal-backdrop" data-modal hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h2 class="modal-title" id="modal-title"></h2>
+      <button type="button" data-close-modal>Close</button>
+    </div>
+    <div class="modal-body" data-modal-body></div>
+  </div>
+</div>
+<div class="undo-toast" data-undo role="status" aria-live="polite">
+  <span data-undo-label>Removed</span>
+  <button type="button" data-undo-btn>Undo</button>
+</div>
+<script>
+(() => {
+  const reviewData = {"4159566": {"verdict": "WATCH", "review_rel": "reviews/4159566-2020-pivot-firebird-2026-04-28.md", "summary": {"logic": "This is a real all-premium 2020 Race X01 build (MSRP ~$5,999 per Mountain Bike Picker's 2020 spec table) at $2,900 asking — 48% of MSRP on a 6-year-old enduro, dropping to ~42% effective after the user's typical $375 lowball. Owner-disclosed flaws (rear shock due for routine rebuild, carbon crank cosmetic chip, BB-area frame wear) are honest and consistent with the X2 squelch issue widely reported in forums (singletrackworld, MBR), so the disclosure is cr...", "watch_trigger": "drive over to inspect within the next week. If", "bbb": "", "buyer_ceiling": "$1,800 — won't pay above", "probable_clear": "~$2,300.", "flip_verdict": "thin. Best case is ~$195 over 3–8 weeks of carry."}}, "4171195": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4069076": {"verdict": "PASS", "review_rel": "reviews/4069076-2022-ibis-ripmo-2026-04-30.md", "summary": {"logic": "The bike is genuinely well-spec'd and well-maintained — GX AXS wireless, Fox Factory 36 (converted to 170mm) and Float X2 Factory both Kashima, Industry Nine stem, BikeYoke Revive Max dropper, and fresh brakes on a ridewrapped carbon Ripmo V2 frame. But two structural problems: (1) the frame is XL, which is a dealbreaker per the user's size preference — the L/M resale pool in SoCal is several times deeper than XL, and (2) even at the right size, $2,650 as...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,800 — 68% of ask. The seller is", "probable_clear": "$2,250 — XL clears 10–15% below L/M of the", "flip_verdict": "thin and slow. Expected $200 over 6–10 weeks is"}}, "3917477": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4165883": {"verdict": "WATCH", "review_rel": "reviews/4165883-2024-mondraker-foxy-r-2026-04-30.md", "summary": {"logic": "The bike checks the right boxes — 2024 carbon enduro, Large frame (matches size preference), 17 photos, 1156-char description, near-zero miles on the wheels/cassette/tires (genuine demo-bike pattern). Asking $2,000 is roughly 31% of the 2024 €5,999 MSRP — a steeper discount than a 2-year-old carbon enduro should clear at, which is the \"investigate hard\" tier from msrp-discount-math. Two reasons not to BUY at ask: (1) the user explicitly named $1,800 as th...", "watch_trigger": "**BUY at $1,800 cash, immediate pickup. PASS if", "bbb": "", "buyer_ceiling": "$1,800 — the user's stated target, ratified", "probable_clear": "$2,100 — NX/GX/G2R spec caps the ceiling;", "flip_verdict": "thin-to-acceptable. Expected $110 profit over 4–6"}}, "4110109": {"verdict": "PASS", "review_rel": null, "summary": {}}, "3942688": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4055864": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4106094": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4101457": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4098660": {"verdict": "PASS", "review_rel": null, "summary": {}}, "4097387": {"verdict": "WATCH", "review_rel": "reviews/4097387-2024-yt-capra-2026-05-06.md", "summary": {"logic": "The bike itself is excellent — BikeRadar's 2024 Enduro Bike of the Year, mechanic-owned with monthly service, and built well beyond stock spec with a coil Fox DHX2, Grip X2 fork internals, XX1 AXS, and TRP Evo Pro Gold brakes. The problem is purely pricing: $3,000 is the highest comp in the entire corpus for this model, and the market has already voted by leaving it unsold for 7+ months. The seller reposted in March 2026 without a visible price drop, sign...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,500 — the most to pay; $2,500 is the corpus median for the model line across all trims, and the upgraded spec doesn't reliably translate to dollar-for-dollar resale recovery.", "probable_clear": "$2,800–$3,000 — the market has already demonstrated resistance at $3,000 for 7 months; expect next buyer's lowball to land it near $2,900. FB Marketplace locally: $2,600–$2,800.", "flip_verdict": "Thin at buyer ceiling of $2,500. $300 expected profit over 3–6 weeks is marginal — one unexpected service bill eliminates it. If acquisition comes in at $2,200–$2,300, expected pr..."}}, "4032891": {"verdict": "PASS", "review_rel": "reviews/4032891-2024-santa-cruz-tallboy-2026-04-30.md", "summary": {"logic": "The title says \"2024 Santa Cruz Tallboy D,\" but Santa Cruz's published 2024 Tallboy lineup is carbon-only — R, S, X0 AXS, X0 AXS RSV, XX SL AXS RSV, XX AXS RSV. The D alloy trim was the entry-level 2022-and-earlier configuration. Most likely this is a 2022 Tallboy D Aluminum mislabeled as a 2024, which the never-confabulate principle says defaults to PASS or WATCH on its own. Pricing kills it the rest of the way: $2,300 ask is ~82% of the 2022 D's ~$2,800...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "~$1,400 (60% of ask, applying the aged-listing rule from feedback_resale_calibration.md).", "probable_clear": "$1,400–$1,600. The Tallboy D Aluminum is the entry-level orphan of the line — buyers wanting a Santa Cruz Tallboy step up to carbon (R/S minimum); buyers wanting alloy 130/120 tra...", "flip_verdict": "negative-to-thin at best, *and* it requires a buy that the seller has shown no willingness to entertain across 11 months. The expected-case margin is zero. The dollar profit at ex..."}}, "4059695": {"verdict": "PASS", "review_rel": "reviews/4059695-2022-transition-scout-2026-05-06.md", "summary": {"logic": "Pricing anchors are nearly absent — no BBB match and the broad corpus query returns only this listing itself, so there's no independent floor to evaluate the ask against. The 27.5\" wheel format and GX Eagle drivetrain both cap the resale pool and premium story in SoCal, where buyers strongly favor 29\" enduro builds. At $2,500 OBO, even landing acquisition at $2,100–$2,200 leaves an expected flip profit of $0–$200 after costs — the margin is too thin to ju...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,100 — absolute maximum given no floor anchor and 27.5\" format discount.", "probable_clear": "$2,200–$2,400 — buyers of 27.5\" trail bikes shop price-sensitively; expect lowball to land near $2,300. No closed-deal data in corpus; this estimate is speculative.", "flip_verdict": "Negative to thin. Expected profit of $100 across 4–8 weeks is not worth deploying capital. Even the best-case scenario ($400) requires the next buyer to pay near asking price on a..."}}, "4060500": {"verdict": "PASS", "review_rel": "reviews/4060500-2020-norco-sight-2026-05-06.md", "summary": {"logic": "At 6 years old, the expected clear for a bike of this class is 35–40% of MSRP (~$1,750–$2,000 against a ~$5,000 comparable complete), yet the seller is asking $3,000 — 60% of MSRP and well above where the depreciation curve puts 6-year-old enduro bikes. The drivetrain is a mismatched assembly (X01 derailleur, GX cassette, GX shifter, XX1 chain) that the scraper scored as X01 but is effectively GX-grade performance; this overstates the spec significantly....", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,100 — anchored against the 35–40% MSRP clear band. Above $2,100 the flip economics are negative.", "probable_clear": "$2,000–$2,300 — the 6-year depreciation curve is real; buyers will apply their own lowball. SoCal local: $1,800–$2,100.", "flip_verdict": "Negative. Even at buyer ceiling of $2,100, the expected clear produces a loss. The best-case scenario requires the next buyer to pay at the high end of what a 6-year-old bike shou..."}}, "4086360": {"verdict": "PASS", "review_rel": "reviews/4086360-2020-ibis-mojo-hd4-2026-05-06.md", "summary": {"logic": "Asking price of $2,050 is already at the top edge of what a 6-year-old 27.5\" trail/enduro bike realistically clears for — the depreciation curve puts the clear band at ~$1,750–$2,050 (35–40% of ~$5,000 MSRP), meaning the seller is asking at the floor. The \"no lowballing please\" language explicitly closes acquisition room below that. At any likely acquisition price (~$1,900), the user would need the next buyer to pay full asking price to break even on the...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,900 — the most to pay if resale numbers are to work at all; even this is marginal.", "probable_clear": "$1,900–$2,100 — the 6-year depreciation curve and 27.5\" format both cap the next buyer's willingness. The corpus for this model is empty; the estimate is based on the depreciation...", "flip_verdict": "Negative to break-even. The expected clear matches the cost basis — zero profit. Best-case $300 requires favorable conditions (right buyer, May peak season). This is not a workabl..."}}, "4081587": {"verdict": "WATCH", "review_rel": "reviews/4081587-2020-rocky-mountain-instinct-bc-2026-05-06.md", "summary": {"logic": "The Instinct BC Edition is a genuinely unique bike (high-pivot with idler pulley, distinct kinematics) with a dedicated buyer pool, sold by a powerseller with 25 photos and a fresh April 27 repost — timing aligns with peak May season. Stock MSRP was $7,199; asking $2,550 is 35.4% of that — right at the floor of the 35–40% depreciation band for 6-year-old bikes, meaning there's no pricing gift but also no overpricing. The stock X01 drivetrain has been repl...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,300 — the point below which the flip margin becomes workable at expected clear.", "probable_clear": "$2,700–$2,900 — the BC Edition buyer is typically a knowledgeable rider who has done the research; they'll lowball but not to GX-trail-bike levels. Corpus is empty so this estimat...", "flip_verdict": "Acceptable in the May window. $350 expected profit over 3–5 weeks is marginal but positive, and the BC Edition's dedicated buyer pool reduces the risk of a slow clear relative to..."}}, "4167499": {"verdict": "PASS", "review_rel": "reviews/4167499-2025-intense-sniper-xc-2026-05-06.md", "summary": {"logic": "This is a mid-spec XC bike (SLX 12-speed, e-thirteen XC wheels, Fox 32 / Fox Performance Elite Float) priced at 71% of its $3,999 MSRP — normal depreciation for a nearly-new bike, not a discount. The scraper's score of 17.5 is inflated by the 2025-model-year bonus (+5), which rewards recency but doesn't change the flip economics: at 71% of MSRP, there is no room for the user to acquire below the next buyer's lowball threshold. The XC buyer pool in SoCal i...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,500 — the most to pay if any flip margin is to exist at all.", "probable_clear": "$2,700–$2,900 — XC buyers shop carefully and price-compare against new dealer stock. At $2,850+ asking on a used bike, they may just buy new.", "flip_verdict": "Thin to negative. The expected $200 profit requires (a) acquiring at $2,500 — unlikely from a fresh powerseller listing — and (b) the next buyer paying above current asking price...."}}, "4167573": {"verdict": "WATCH", "review_rel": "reviews/4167573-2020-giant-reign-2026-05-06.md", "summary": {"logic": "Refreshed from 2026-04-30 review — no material change in listing status (same $2,550 price, same powerseller, still active). The core tension is unchanged: Fox 36 Factory Grip2 Kashima fork, Fox Float X2 shock, and DT Swiss wheels are genuinely premium for a 6-year-old enduro, but the asking price at 51% of seller's stated $5,000 cost basis is above the 35–40% MSRP clear band for bikes this old ($1,575–$1,800 at 35–40% of ~$4,500 stock MSRP). Flip math is...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,000.", "probable_clear": "$2,200 — at the depreciation ceiling for a 6-year-old enduro. Brake-rub issue (see web research) may slow buyer interest if they research the model.", "flip_verdict": "Marginal-to-negative. Expected scenario is a small loss. Best case is $120 over 4–6 weeks — not worth the capital."}}, "4157611": {"verdict": "PASS", "review_rel": "reviews/4157611-2020-giant-anthem-advanced-pro-0-2026-05-06.md", "summary": {"logic": "The adjacent-trim BBB match (Pro 1 = $1,784 Excellent midpoint) puts the fair value of a 2020 Anthem Advanced Pro significantly below the $3,000 ask — and the Pro 0 deserves a discount vs. that, not a premium, because the Fox Live Valve electronics add documented reliability risk (wire disconnection, aging proprietary electronics, expensive service path) that knowledgeable XC buyers will price in. The seller's $12,050 MSRP claim is plausible for the Live...", "watch_trigger": "", "bbb": "~$1,437 (good) · 2020 Giant Anthem Advanced Pro 29 1 — ⚠ trim mismatch", "buyer_ceiling": "$2,400 — the maximum at which a flip could theoretically break even given Live Valve risk and narrow buyer pool.", "probable_clear": "$2,400–$2,700 — knowledgeable XC buyers will research Live Valve reliability concerns and price accordingly. The Pro 1 at $1,999 in the corpus is the floor signal; the Pro 0 comma...", "flip_verdict": "Negative. Expected scenario is a loss. Best case ($250 profit) requires both getting the bike at buyer ceiling ($2,400 — unlikely given powerseller counter dynamics) and clearing..."}}, "ou_f07c1034-1528-3cdc-9d52-c4237cc34598": {"verdict": "PASS", "review_rel": "reviews/ou_f07c1034-1528-3cdc-9d52-c4237cc34598-2025-canyon-grand-on-2026-05-14.md", "summary": {"logic": "Two independent problems kill this listing. First, identification is uncertain: the title claims \"2025 Full suspension carbon E-MTB\" but the Canyon Grand Canyon:ON 7 is a hardtail aluminum e-MTB (MSRP ~$3,799) — \"full suspension\" and \"carbon\" are both inconsistent with the known model. Either the seller is wrong about their own bike's specs, or the listing is for a different Canyon e-MTB model that needs clarification before evaluation can proceed. Second...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "", "probable_clear": "", "flip_verdict": ""}}, "ou_2c984921-7461-34f3-b73a-3be84c9f54ac": {"verdict": "WATCH", "review_rel": "reviews/ou_2c984921-7461-34f3-b73a-3be84c9f54ac-unknown-specialized-stumpjumper-2026-05-16.md", "summary": {"logic": "Year and trim are completely absent — this listing cannot be identified with confidence, so no fair-floor anchor exists. The description's \"good budget fun bike\" framing from the seller actively suggests low-spec (base alloy build), not a premium Comp or Expert. With 1 photo and zero spec callouts, the component-spec-matters principle requires discounting value toward the base build (~$1,799 MSRP), at which $1,100 asking is ~61% of MSRP — not a deal for a...", "watch_trigger": "message the seller for (1) model year, (2) drivetrain", "bbb": "", "buyer_ceiling": "$850 — walk away above this regardless of trim. At $850", "probable_clear": "$950–$1,100 (Comp Alloy) or $750–$850 (base alloy).", "flip_verdict": ""}}, "ou_dc9fa1ae-fa92-3890-87b9-39696dacb4e5": {"verdict": "PASS", "review_rel": "reviews/ou_dc9fa1ae-fa92-3890-87b9-39696dacb4e5-unknown-trek-fuel-ex-2026-05-16.md", "summary": {"logic": "The listing has three overlapping problems that each individually might be manageable, but together make this a skip. First, no model year — without knowing whether this is a Gen 4 (2018-2019), Gen 5 (2020-2022), or Gen 6 (2023-2025), there is no reliable MSRP anchor, no BBB match, and no way to assess spec tier. Second, the description discloses a missing cassette and chain — the bike cannot be ridden, which shifts the buyer into project-bike territory a...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,100 — the maximum to pay given the unknown year, missing drivetrain parts, zero service documentation, and flip math that barely clears costs.", "probable_clear": "$1,100–$1,250 — the market's lowball from the next buyer will land here. SoCal demand is moderate for mid-tier Treks; not a fast mover unless priced aggressively. Sep-Nov and Mar-...", "flip_verdict": ""}}, "ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b": {"verdict": "WATCH", "review_rel": "reviews/ou_9b13e006-47ee-3156-a1f7-ecf53719ce1b-2022-specialized-stumpjumper-evo-2026-05-16.md", "summary": {"logic": "This is a heavily upgraded 2022 Stumpjumper EVO Comp (alloy frame, seller confirms) with a genuinely excellent current build — Fox 36, Fox rear shock, Industry Nine Enduro wheels with Hydra hub, SRAM Eagle X01 drivetrain, AXS dropper, TRP DHR brakes — and a documented recent full suspension rebuild at Gravity Bicycles in Fullerton. At $2,500 ask the price is at the corpus median for all Stumpjumper EVO variants, which is a fair (not aggressive) starting p...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,200 — beyond this point the flip economics are thin and the single-photo risk premium is not compensated.", "probable_clear": "$2,400 — the actual transaction price after buyer lowball. SoCal MTB buyers are experienced negotiators; expect 15–20% off list to clear within a reasonable timeframe.", "flip_verdict": ""}}, "4169433": {"verdict": "WATCH", "review_rel": "reviews/4169433-2025-rocky-mountain-altitude-a50-2026-05-14.md", "summary": {"logic": "This is a one-ride 2025 A50 at 52% of MSRP — a genuinely unusual situation driven by a clear, innocent motivation (wrong size). At asking ($2,500), flip economics are nearly breakeven; the flip only works if the seller accepts ≤ $2,200. The trigger is price: open at $2,100, walk if seller won't meet at $2,200 or below. No red flags, solid provenance, genuine MSRP discount — but the mid-spec alloy build (SLX/Fox Performance) caps resale below what a carbon...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$2,250 — walk above this number. The bike is essentially new, so the seller knows it's worth real money; paying above $2,250 compresses margin to an unacceptable level.", "probable_clear": "$2,550–$2,650 — next buyer will run their own lowball, and will compare to new bikes at $3,600 on sale. A $700–$1,000 savings vs. new is the pitch.", "flip_verdict": "Thin. Expected profit is ~$300 over 3–6 weeks. The dollar return doesn't justify much risk. This works only if you hit the $2,200-or-below acquisition price — at asking, it's a wa..."}}, "4162008": {"verdict": "PASS", "review_rel": "reviews/4162008-2025-specialized-chisel-fs-2026-05-14.md", "summary": {"logic": "Entry-level NX drivetrain on a narrowly-appealing XC platform, priced at ~75% of MSRP for a barely-ridden bike — not a deal for a reseller. Six weeks on the market with no price drops signals a firm seller whose reservation price is close to asking; the lowball room needed to make the flip work (≤ $1,900 buy-in) is unlikely to materialize. XC bikes turn slower in SoCal's enduro-dominated market, and base-spec NX components actively discourage the performa...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,950 — at anything above this, resale margin is negative or trivially thin.", "probable_clear": "$2,100–$2,200. XC bikes clear slower in SoCal; NX drivetrain is an active negative in buyer eyes. A $200–$300 savings vs. new won't motivate many buyers who could finance a new ba...", "flip_verdict": "Negative. The economics don't work at any realistic acquisition price. To get to a positive expected-case, you need to buy at ≤ $1,900 AND clear at ≥ $2,300 — both improbable give..."}}, "4083960": {"verdict": "WATCH", "review_rel": "reviews/4083960-2018-intense-tracer-2026-05-14.md", "summary": {"logic": "The 2018 Intense Tracer has documented frame-cracking issues at the chainstay/seatstay junction and around the lower-link bolt assembly — a structural failure mode reported on multiple 2018-gen Tracer frames in MTBR threads. At $1,750 for an 8-year-old 27.5\" enduro bike with no BBB match, price is sitting right at the theoretical depreciation floor (35% of estimated ~$4,999 MSRP), which means there is no unambiguous deal unless the frame is confirmed clea...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,450.", "probable_clear": "$1,800–$1,950. The market for 8-year-old 27.5\" enduro bikes is narrowing; buyers compare to current-gen mullet and 29\" options. Asking prices on comparable vintage enduro bikes ru...", "flip_verdict": "Thin to negative. At buyer ceiling ($1,450) plus service costs, the expected clear ($1,900) leaves almost no margin. Best-case at $2,100 is a $190 profit over 6–10 weeks — not com..."}}, "ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778": {"verdict": "PASS", "review_rel": "reviews/ou_6ca4f7b1-4f50-3d3e-862c-fa9ac2a6b778-turner-rfx-v4-2026-05-16.md", "summary": {"logic": "The Turner RFX V4.0 has a well-documented structural failure mode: carbon link inserts crack, and Turner's warranty response was to epoxy-repair rather than replace — producing documented customer disputes and at least one frame sent back glued while the owner paid $3K+ for it. For a boutique brand that no longer appears to be actively producing bikes (no current production evidence found), there is no warranty path and no brand support if the carbon link...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,600 — this is the walk-away. At 27% of stated MSRP it reflects the structural risk premium and boutique-brand illiquidity.", "probable_clear": "$1,900–$2,100 — boutique brand, niche audience, 6+ months already on market at $2,250 suggests $2,250 is above market. Clear at $1,900–$2,100 is realistic on PB with SoCal pickup....", "flip_verdict": ""}}, "ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328": {"verdict": "WATCH", "review_rel": "reviews/ou_8058bdcc-6fa1-3d6c-8be4-0805609ed328-2022-giant-trance-2026-05-16.md", "summary": {"logic": "This listing is priced right at the corpus median ($1,500 vs. $1,425 median) for Giant Trance 27.5 comps, which is not a bargain on its face, but the seller explicitly says \"negotiations available\" — so the effective price after a typical lowball of $300–375 lands this at ~$1,125–$1,200, which is firmly below the corpus p25 of $1,000 only if negotiation holds closer to $300 off. The description discloses two known issues (fork service needed, noisy brakes...", "watch_trigger": "Seller accepts $1,150 or below AND in-person inspection confirms fork service is a routine lower-leg service (not a toasted damper or bent stanchion) and brake noise is pad glazin...", "bbb": "", "buyer_ceiling": "$1,250 — the most to pay given thin flip margins and required service.", "probable_clear": "$1,300–$1,400 — OfferUp/FB buyers will negotiate 10–15% off ask. Do not use $1,500 as a clear estimate.", "flip_verdict": ""}}, "ou_febd8e64-67ec-3616-b7d8-d7ec0dbbc391": {"verdict": "WATCH", "review_rel": "reviews/ou_febd8e64-67ec-3616-b7d8-d7ec0dbbc391-2025-giant-trance-x3-2026-05-14.md", "summary": {"logic": "$1,700 for a 2025 Giant Trance X3 would be ~44% of the Trance X's approximate $3,900 MSRP — a meaningful discount for a near-new trail bike from a premium brand. The Trance X3 is the base aluminum full-suspension build (Fox Performance suspension, Shimano Deore, 145mm rear / 160mm fork), a capable and well-reviewed trail platform. However, the OfferUp corpus entry for this listing has zero photos and no description — the only data is title, price, and loc...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,500.", "probable_clear": "$1,800–$1,950. Giant is a value brand; buyers know they can get a new one with a warranty. The discount vs. new is the pitch.", "flip_verdict": "Thin. Expected margin is $50–$200 over 4–6 weeks, and that's contingent on the bike being what the title says and in good condition. The service budget is unknown and could erode..."}}, "ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8": {"verdict": "WATCH", "review_rel": "reviews/ou_1e112ed4-d0db-3672-93cb-8d913fabe7f8-2022-cannondale-jekyll-2026-06-06.md", "summary": {"logic": "This is a genuinely interesting listing — a mainstream-mid-tier brand the user favors (Cannondale), a Large frame (in-band, not the XL dealbreaker), a carbon frame, and a claimed ENVE-carbon / Industry-Nine wheel upgrade over the Jekyll 2's stock alloy WTB hoops. At $2,000 it asks ~49% of the $4,100 MSRP, which on the surface looks like a real discount. But three things hold it back from BUY: (1) the bike is ~4 model years old and a 2022 premium enduro cl...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,300 — for an aged premium listing reposted", "probable_clear": "~$1,500. A 2022 premium enduro clears at", "flip_verdict": ""}}, "4116127": {"verdict": "WATCH", "review_rel": "reviews/4116127-2020-evil-offering-2026-05-16.md", "summary": {"logic": "This is a thoroughly documented, well-maintained 6-year-old Evil Offering with nearly every component recently rebuilt or replaced — an unusually honest and detailed listing. The problem is price and seller posture: posted November 2025, it has been active for ~5.5 months with zero price movement, which means the seller is either not watching the listing or is anchored at $2,500 and will not budge easily. At asking, $2,500 is ~43% of the GX Eagle MSRP ($5...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,600 — this is the walk-away price. At 64% of asking, it requires the seller to have moved meaningfully before contact, or to accept a dramatic cut. Do not pay above $1,600 rega...", "probable_clear": "$2,100–$2,200. The upgraded components add real value over a stock GX build, but this is still a 6-year-old boutique-brand bike. Evil's brand uncertainty (layoffs, warranty concer...", "flip_verdict": "thin-to-acceptable. The expected $425 profit in 4–8 weeks is acceptable but not compelling for a boutique-brand bike with an elevated brand-risk factor (Evil layoffs, warranty unc..."}}, "fb_976994015245273": {"verdict": "WATCH", "review_rel": "reviews/fb_976994015245273-2022-specialized-stumpjumper-2026-06-06.md", "summary": {"logic": "This refresh re-ran the review with the v2 multi-photo capture (10 full-res photos vs. the single primary photo v1 had). The multi-photo set resolves the trim and condition questions that drove the original WATCH, and replaces the size assumption with a sharper — and more cautionary — read.", "watch_trigger": "message the seller for the frame size (S-number or printed size) — promote to BUY at ≤ ~$2,100 the moment it confirms S3/Medium or S4/Large (trim and condition are already confirm...", "bbb": "", "buyer_ceiling": "$2,050 — raised from v1's $1,850 now that the base-Comp", "probable_clear": "$2,550 — a clean 2022 Stumpjumper Expert (~$6,500", "flip_verdict": "a real (if modest) flip now that trim is Expert — *conditional on size*. At a ~$2,000 buy against a ~$2,550 Expert clear, expected net ≈ +$150–$250 after costs (v1 was break-even..."}}, "fb_1015295447625273": {"verdict": "WATCH", "review_rel": "reviews/fb_1015295447625273-2022-yt-izzo-2026-06-06.md", "summary": {"logic": "This refresh re-ran the review with v2 multi-photo capture (4 photos vs. the single primary v1 had). The photos satisfy the spec/condition half of the original WATCH trigger, leaving only the price half — so the verdict is unchanged but the trigger simplifies.", "watch_trigger": "BUY at a buy-in of ≤ ~$1,500 — i.e. if the seller drops the ask to ≤$1,700 or accepts ≤$1,500 on offer. Spec and carbon condition are now confirmed from photos; price is the only...", "bbb": "", "buyer_ceiling": "$1,500 (~63% of ask) — the walk-away, consistent with the", "probable_clear": "$1,750–$1,900 (~$1,850 point). ~4-year-old DTC carbon", "flip_verdict": "thin-to-negative at the $1,500 ceiling — only a sub-$1,500 buy turns a usable margin. The DTC resale discount kills the spread; the same spec in a Trek Fuel EX or Stumpjumper clea..."}}, "ou_d1027a80-7379-3f1c-ab47-f6c4744c47f1": {"verdict": "WATCH", "review_rel": "reviews/ou_d1027a80-7379-3f1c-ab47-f6c4744c47f1-2022-yt-jeffsy-2026-06-06.md", "summary": {"logic": "This is a clean, honestly-described 2022 YT Jeffsy Core 2 — alloy, 27.5\", Medium — at $2,100, with no red flags, 10 photos, original-owner framing, and ~$325 of named small-part upgrades. The problem is the flip math, not the bike. YT is a direct-to-consumer boutique brand, and the bicycles-depreciate-fast principle says a 4-year-old premium MTB clears at ~35–40% of MSRP regardless of brand cachet, with no boutique premium surviving to the clearing level....", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,365 (~65% of $2,100). Listing is ~1 week old with no drops; for an aged/undropped premium listing the calibrated ceiling is 60–65% of ask, not an 80–85% industry lowball. Walk...", "probable_clear": "~$1,500. Anchored on the 35–40% MSRP clearing band for a 4-year-old alloy mid-tier premium bike plus the named ~$325 upgrades, and discounted because asking ≠ clear (corpus only s...", "flip_verdict": "Thin-to-negative at any price the seller is likely to accept near ask. A flip only works if acquisition lands at/under ~$1,250–$1,300, and even then it's a $65–$215 / 4–7 week gri..."}}, "ou_7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b": {"verdict": "PASS", "review_rel": "reviews/ou_7c7bc8c3-529d-352d-a0bb-d985b7ceaa2b-2021-specialized-stumpjumper-evo-2026-06-06.md", "summary": {"logic": "This is a clean, correctly-identified 2021 Stumpjumper EVO Comp carbon, but it does not pencil as a flip. It is a 5-year-old premium MTB, which by the bicycles-depreciate-fast principle clears at ~35–40% of its $4,999 MSRP — roughly $1,750–$2,000 — yet it is asked at $2,950 (59% of MSRP). The seller is Lebel Bicycles, an established pre-owned dealer with 1,000+ sales and a thorough professional listing; the low-effort-listings deal pattern explicitly does...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "~$1,900 — the walk-away. This is ~64% of ask, at the top of the aged-listing 60–65% band, but tightened by the fact that the seller is an established dealer (informed, engaged, st...", "probable_clear": "~$1,950 — top of the 35–40%-of-MSRP band, justified by the carbon frame and intact build, after the next buyer's lowball. Never used the $2,950 asking as a clear proxy (asking run...", "flip_verdict": "negative. Even at an aggressive $1,900 buy, the cost basis ($2,220) exceeds the probable clear ($1,950) — this loses money on the expected case and barely breaks even on the best..."}}, "ou_5fef2406-10e2-3d1e-92cd-b622d49c13b9": {"verdict": "PASS", "review_rel": "reviews/ou_5fef2406-10e2-3d1e-92cd-b622d49c13b9-2022-giant-trance-2026-06-06.md", "summary": {"logic": "PASS as a flip. This is the base 2022 Trance 27.5 (non-X) — the seller says so explicitly and the stock-spec callout (\"rockshox 35\" fork + \"rockshox deluxe select air\" shock) confirms it — so the cached BBB row (2022 Trance X 1, MSRP $3,250, midpoint $1,277) is the wrong trim and overstates value; the real MSRP is ~$2,200 (never-confabulate, msrp-discount-math). At $1,100 ask the bike is priced essentially at-market for a 4-year-old non-X that, by the sel...", "watch_trigger": "", "bbb": "~$1,277 (good) · 2022 Giant Trance X 1 — ⚠ trim mismatch", "buyer_ceiling": "$850 (~77% of ask) — the walk-away. This is a fresh listing (1 day old) so the aged-listing 60–65% ceiling does not apply, but \"need gone\" + two disclosed flaws (fork service, dra...", "probable_clear": "~$950 after the next buyer's lowball. (Asking ≠ clear; the $1,500 corpus ask and $1,350 broad median are upper bounds, not clears.)", "flip_verdict": "negative. Even buying at the $850 ceiling, the expected clear (~$950) lands *below* the all-in basis (~$1,060). Only the best-case clear ($1,100) breaks even-plus, and that requir..."}}, "ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d": {"verdict": "PASS", "review_rel": "reviews/ou_419d5c6b-6c16-3480-ae53-5ea3f6aa5d6d-unknown-giant-trance-2026-06-06.md", "summary": {"logic": "PASS — primarily on identification uncertainty, secondarily on thin flip math. The title is misspelled (\"Gian Trance\" = Giant Trance) and carries no model year, and the \"Up Grade\" claim is generic: the description names \"SRAM Eagle 12-speed,\" a \"Fox Grip fork,\" and \"Shimano hydraulic\" brakes but never states a tier (NX vs GX vs X01, Grip vs Grip2/Factory, MT200 vs XT), so the build cannot be valued above a mid-tier baseline. There is no BBB match and zero...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,200 — aged ~9–10 weeks, reposted without a", "probable_clear": "~$1,200 — what an alloy, year-unknown,", "flip_verdict": "negative-to-thin. At a $1,200 buy, the expected"}}, "ou_163dd107-96e4-35d6-9683-db18cc0aa2db": {"verdict": "WATCH", "review_rel": "reviews/ou_163dd107-96e4-35d6-9683-db18cc0aa2db-2017-trek-fuel-ex-2026-06-06.md", "summary": {"logic": "WATCH — and the trigger is identification, not price. The title carries no model year and \"Project One Factory Racing\" is Trek's custom-paint program, not a build tier, so the actual generation is unconfirmed. The spec list (SRAM X0 11-speed, Bontrager RXL wheels, Fox Kashima Thru Shaft-era suspension) points to a circa 2017–2018 Fuel EX 9.8 — roughly an 8–9-year-old gen-5 platform — but that is inference, not a clean parse, and there is no BBB match and...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,100. This is an aged (9-month), reposted-without-drop", "probable_clear": "$1,450 — what it actually transacts at after the next", "flip_verdict": ""}}, "ou_21125aa1-3e34-366f-9e8e-2e42d7fca356": {"verdict": "PASS", "review_rel": "reviews/ou_21125aa1-3e34-366f-9e8e-2e42d7fca356-2023-yt-jeffsy-2026-06-06.md", "summary": {"logic": "PASS on price, not on the bike. The 2023 Jeffsy Core 3 is a genuinely good trail bike (V4L suspension, GX drivetrain, well-reviewed), but at $2,800 ask this listing is the *most expensive* 2023 Core 3 in our corpus — 116% of the exact-comp median ($2,400) and above the same-trim comp that asked $2,400. YT is direct-to-consumer and clears used at a discount to mainstream mid-tier, so it needs a *deeper* buy-in to flip, not a premium one. The economics are...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,750 — ~62.5% of the $2,800 ask, applying the", "probable_clear": "$2,000 — below the $2,400 corpus *asking* median (asking", "flip_verdict": ""}}, "ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327": {"verdict": "WATCH", "review_rel": "reviews/ou_fbc8835f-0a8c-3c52-8a17-1b3c79c25327-2023-yt-jeffsy-2026-06-06.md", "summary": {"logic": "This is a genuine 2023 YT Jeffsy Core 3 at $2,400 — the cheapest of the same-model comps in the corpus (vs. two at $2,800 and one XL at $3,000), and the described build (RockShox Lyrik, Fox Float X, SRAM G2) matches the real Core 3 29 spec, so identification is solid. But two things keep this off BUY: the size is almost certainly small-skewed — the seller writes the bike \"fits like 4.9-5,6 ft\" (4'9\"–5'6\"), which points to a Small or low Medium, against th...", "watch_trigger": "", "bbb": "", "buyer_ceiling": "$1,560 — ~65% of the $2,400 ask. The listing is aged", "probable_clear": "$1,750–$1,850 — after the next buyer's own lowball,", "flip_verdict": "thin-to-negative at the $1,560 ceiling. Once service/tune/"}}};
+  let feedbackData = {"ou_f07c1034-1528-3cdc-9d52-c4237cc34598": {"client": "dashboard", "created_at": "2026-05-13T21:46:07+00:00", "event_id": "c7af8a8b468a4358b18827321f3560b5", "kind": "feedback", "listing_id": "ou_f07c1034-1528-3cdc-9d52-c4237cc34598", "note": "decent bike, bit expensive but not bad", "source": "OU", "title": "Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB", "url": "https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598", "vote": "good"}};
+  let reviewRequests = {"ou_f07c1034-1528-3cdc-9d52-c4237cc34598": {"client": "dashboard", "created_at": "2026-05-13T21:46:41+00:00", "event_id": "efb25350f0de44f48228f2302624abd3", "kind": "review_request", "listing_id": "ou_f07c1034-1528-3cdc-9d52-c4237cc34598", "note": "Requested from dashboard", "source": "OU", "status": "requested", "title": "Canyon Grand ON 7 E-Bike, Size - M, 2025 Full suspension carbon E-MTB", "url": "https://offerup.com/item/detail/f07c1034-1528-3cdc-9d52-c4237cc34598"}};
+  const tabs = [...document.querySelectorAll("[data-tab]")];
+  const fitButton = document.querySelector("[data-fit]");
+  const recentButton = document.querySelector("[data-sort-recent]");
+  const search = document.querySelector(".search");
+  const sections = [...document.querySelectorAll("[data-section]")];
+  const cards = [...document.querySelectorAll(".card")];
+  const modal = document.querySelector("[data-modal]");
+  const modalTitle = document.querySelector("#modal-title");
+  const modalBody = document.querySelector("[data-modal-body]");
+  let activeTab = "all";
+  let preferredOnly = false;
+  let recentFirst = false;
+
+  const localFeedbackKey = "pinkbike-dashboard-feedback";
+  const localRequestKey = "pinkbike-dashboard-review-requests";
+  const localDismissKey = "pinkbike-dashboard-dismissed";
+  let dismissedIds = {};
+
+  function readLocal(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); }
+    catch { return {}; }
+  }
+
+  function writeLocal(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); }
+    catch {}
+  }
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function cardPayload(card) {
+    return {
+      listing_id: card.dataset.id,
+      source: card.dataset.source,
+      title: card.dataset.title,
+      url: card.dataset.url,
+      client: "dashboard"
+    };
+  }
+
+  function mergeLocalState() {
+    feedbackData = { ...feedbackData, ...readLocal(localFeedbackKey) };
+    reviewRequests = { ...reviewRequests, ...readLocal(localRequestKey) };
+    dismissedIds = readLocal(localDismissKey);
+  }
+
+  function applyFeedbackBadges() {
+    cards.forEach(card => {
+      const id = card.dataset.id;
+      const existing = card.querySelector("[data-user-badge]");
+      if (existing) existing.remove();
+      const item = feedbackData[id];
+      if (!item || !item.vote) return;
+      const badge = document.createElement("span");
+      badge.dataset.userBadge = "1";
+      badge.className = `badge status-user-${item.vote}`;
+      badge.textContent = item.vote.toUpperCase();
+      card.querySelector(".topline")?.appendChild(badge);
+    });
+  }
+
+  function applyFilters() {
+    sortCards();
+    const q = (search.value || "").trim().toLowerCase();
+    sections.forEach(section => {
+      const visibleSection = activeTab === "all" || section.dataset.section === activeTab;
+      section.hidden = !visibleSection;
+    });
+    cards.forEach(card => {
+      const section = card.closest("[data-section]").dataset.section;
+      const tabMatch = activeTab === "all" || section === activeTab;
+      const fitMatch = !preferredOnly || card.dataset.fit === "fit-good" || card.dataset.fit === "fit-ok";
+      const searchMatch = !q || card.dataset.search.includes(q);
+      const dismissed = !!dismissedIds[card.dataset.id];
+      card.hidden = dismissed || !(tabMatch && fitMatch && searchMatch);
+    });
+  }
+
+  function sortCards() {
+    const scoreKey = card => {
+      const score = Number(card.dataset.score || 0);
+      return Number.isFinite(score) ? score : 0;
+    };
+    const recentKey = card => {
+      const ts = Number(card.dataset.recent || 0);
+      return Number.isFinite(ts) && ts > 0 ? ts : 0;
+    };
+    const discoveryKey = card => {
+      const ts = Number(card.dataset.discovered || 0);
+      return Number.isFinite(ts) && ts > 0 ? ts : 0;
+    };
+    document.querySelectorAll(".grid").forEach(grid => {
+      const ordered = [...grid.children].sort((a, b) => {
+        if (recentFirst) {
+          const ak = recentKey(a);
+          const bk = recentKey(b);
+          const recency = bk - ak;
+          if (recency) return recency;
+          const discovery = discoveryKey(b) - discoveryKey(a);
+          if (discovery) return discovery;
+        }
+        const score = scoreKey(b) - scoreKey(a);
+        if (score) return score;
+        const discovery = discoveryKey(b) - discoveryKey(a);
+        if (discovery) return discovery;
+        return Number(a.dataset.index || 0) - Number(b.dataset.index || 0);
+      });
+      ordered.forEach(card => grid.appendChild(card));
+    });
+  }
+
+  cards.forEach((card, index) => { card.dataset.index = String(index); });
+
+  function syncTabs() {
+    tabs.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tab === activeTab)));
+  }
+
+  tabs.forEach(button => {
+    button.addEventListener("click", () => {
+      activeTab = activeTab === button.dataset.tab && activeTab !== "all" ? "all" : button.dataset.tab;
+      syncTabs();
+      applyFilters();
+    });
+  });
+  fitButton.addEventListener("click", () => {
+    preferredOnly = !preferredOnly;
+    fitButton.setAttribute("aria-pressed", String(preferredOnly));
+    applyFilters();
+  });
+  recentButton.addEventListener("click", () => {
+    recentFirst = !recentFirst;
+    recentButton.setAttribute("aria-pressed", String(recentFirst));
+    applyFilters();
+  });
+  search.addEventListener("input", applyFilters);
+
+  function closeModal() {
+    modal.hidden = true;
+    modalBody.innerHTML = "";
+  }
+
+  function openModal(title, body) {
+    modalTitle.textContent = title || "";
+    modalBody.innerHTML = body;
+    modal.hidden = false;
+  }
+
+  function reviewBody(card) {
+    const id = card.dataset.id;
+    const review = reviewData[id];
+    const requested = reviewRequests[id];
+    if (review && review.summary && review.summary.logic) {
+      const s = review.summary;
+      const facts = [
+        ["BBB", s.bbb],
+        ["Buyer", s.buyer_ceiling],
+        ["Clear", s.probable_clear],
+        ["Flip", s.flip_verdict],
+        ["Trigger", s.watch_trigger]
+      ].filter(([, value]) => value);
+      const factsHtml = facts.length
+        ? `<div class="summary-facts">${facts.map(([k, v]) => `<div><strong>${escapeHtml(k)}</strong>: ${escapeHtml(v)}</div>`).join("")}</div>`
+        : "";
+      const link = review.review_rel ? `<a class="action" href="../vault/${escapeHtml(review.review_rel)}">Full review</a>` : "";
+      return `<p>${escapeHtml(s.logic)}</p>${factsHtml}<div class="modal-actions">${link}</div>`;
+    }
+    const label = requested ? "Review requested" : "Request review";
+    return `<div class="status-line">${requested ? "Queued from dashboard" : ""}</div><div class="modal-actions"><button type="button" data-request-review>${label}</button></div>`;
+  }
+
+  function noteBody(card) {
+    const id = card.dataset.id;
+    const current = feedbackData[id] || {};
+    const vote = current.vote || "";
+    return `
+      <div class="segmented">
+        <button type="button" data-vote="good" aria-pressed="${vote === "good"}">Good</button>
+        <button type="button" data-vote="bad" aria-pressed="${vote === "bad"}">Bad</button>
+      </div>
+      <textarea data-note placeholder="Short note">${escapeHtml(current.note || "")}</textarea>
+      <div class="modal-actions">
+        <span class="status-line" data-save-status></span>
+        <button type="button" data-save-note>Save</button>
+      </div>`;
+  }
+
+  async function postJson(url, payload) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  }
+
+  let activeCard = null;
+  document.addEventListener("click", async event => {
+    const close = event.target.closest("[data-close-modal]");
+    if (close || event.target === modal) {
+      closeModal();
+      return;
+    }
+    const reviewButton = event.target.closest("[data-open-review]");
+    if (reviewButton) {
+      activeCard = reviewButton.closest(".card");
+      openModal(activeCard.dataset.title, reviewBody(activeCard));
+      return;
+    }
+    const noteButton = event.target.closest("[data-open-note]");
+    if (noteButton) {
+      activeCard = noteButton.closest(".card");
+      openModal(activeCard.dataset.title, noteBody(activeCard));
+      return;
+    }
+    const voteButton = event.target.closest("[data-vote]");
+    if (voteButton) {
+      modalBody.querySelectorAll("[data-vote]").forEach(b => b.setAttribute("aria-pressed", String(b === voteButton)));
+      return;
+    }
+    const saveButton = event.target.closest("[data-save-note]");
+    if (saveButton && activeCard) {
+      const selected = modalBody.querySelector("[data-vote][aria-pressed='true']");
+      const status = modalBody.querySelector("[data-save-status]");
+      const payload = {
+        ...cardPayload(activeCard),
+        vote: selected ? selected.dataset.vote : "good",
+        note: modalBody.querySelector("[data-note]")?.value || ""
+      };
+      feedbackData[payload.listing_id] = payload;
+      writeLocal(localFeedbackKey, feedbackData);
+      try {
+        const result = await postJson("/api/feedback", payload);
+        if (result.ok && result.event) feedbackData[payload.listing_id] = result.event;
+        status.textContent = "Saved";
+      } catch {
+        status.textContent = "Saved locally";
+      }
+      applyFeedbackBadges();
+      return;
+    }
+    const requestButton = event.target.closest("[data-request-review]");
+    if (requestButton && activeCard) {
+      const status = modalBody.querySelector(".status-line");
+      const payload = { ...cardPayload(activeCard), note: "Requested from dashboard" };
+      reviewRequests[payload.listing_id] = payload;
+      writeLocal(localRequestKey, reviewRequests);
+      try {
+        const result = await postJson("/api/review-request", payload);
+        if (result.ok && result.event) reviewRequests[payload.listing_id] = result.event;
+        status.textContent = "Review requested";
+      } catch {
+        status.textContent = "Saved locally";
+      }
+      requestButton.textContent = "Review requested";
+    }
+  });
+
+  async function loadServerFeedback() {
+    try {
+      const response = await fetch("/api/feedback");
+      if (!response.ok) return;
+      const data = await response.json();
+      feedbackData = { ...feedbackData, ...(data.feedback || {}) };
+      reviewRequests = { ...reviewRequests, ...(data.review_requests || {}) };
+      applyFeedbackBadges();
+    } catch {}
+  }
+
+  // ---- swipe-to-delete ----
+  // Swipe a card left to reveal a red Delete tab; keep swiping past the commit
+  // threshold (or tap the tab) to fling it off-screen. The dismissal persists in
+  // localStorage (stays gone across reloads) and, after a short undo window,
+  // posts a "bad" vote so the swipe doubles as negative feedback on the bike.
+  const OPEN_PX = 92;        // resting offset when the delete tab is held open
+  const REVEAL_PX = 64;      // release past this (but short of commit) -> snap open
+  const UNDO_MS = 4000;      // how long the undo toast stays up
+  const FEEDBACK_DELAY_MS = 4500; // delay the bad-vote post so a quick undo cancels it
+  const pendingDeletes = new Map();
+  const toast = document.querySelector("[data-undo]");
+  const toastLabel = toast && toast.querySelector("[data-undo-label]");
+  const toastBtn = toast && toast.querySelector("[data-undo-btn]");
+  let toastTimer = null;
+
+  const cardWidth = card => card.getBoundingClientRect().width || 320;
+  const commitThreshold = card => Math.max(150, cardWidth(card) * 0.45);
+
+  function setSurfaceX(card, surface, x, animate) {
+    surface.style.transition = animate ? "transform .2s ease" : "none";
+    surface.style.transform = x ? `translateX(${x}px)` : "translateX(0)";
+    card.classList.toggle("swipe-active", x < -4);
+  }
+
+  function closeOpenCards(except) {
+    cards.forEach(card => {
+      if (card === except || card.dataset.swipeOpen !== "1") return;
+      card.dataset.swipeOpen = "";
+      const s = card.querySelector(".card-surface");
+      if (s) setSurfaceX(card, s, 0, true);
+    });
+  }
+
+  function suppressClick(el) {
+    const handler = ev => { ev.preventDefault(); ev.stopPropagation(); el.removeEventListener("click", handler, true); };
+    el.addEventListener("click", handler, true);
+    setTimeout(() => el.removeEventListener("click", handler, true), 380);
+  }
+
+  function visibleCount(sectionId) {
+    return cards.filter(c => {
+      const sec = c.closest("[data-section]");
+      return sec && sec.dataset.section === sectionId && !dismissedIds[c.dataset.id];
+    }).length;
+  }
+
+  function updateCounts() {
+    sections.forEach(section => {
+      const id = section.dataset.section;
+      const n = visibleCount(id);
+      const headCount = section.querySelector(".section-head .count");
+      if (headCount) headCount.textContent = String(n);
+      const tab = tabs.find(t => t.dataset.tab === id);
+      const span = tab && tab.querySelector("span");
+      if (span) span.textContent = String(n);
+    });
+  }
+
+  function postFeedbackBad(card) {
+    const id = card.dataset.id;
+    const payload = { ...cardPayload(card), vote: "bad", note: "swiped away on dashboard" };
+    feedbackData[id] = payload;
+    writeLocal(localFeedbackKey, feedbackData);
+    postJson("/api/feedback", payload)
+      .then(result => {
+        if (result && result.ok && result.event) {
+          feedbackData[id] = result.event;
+          writeLocal(localFeedbackKey, feedbackData);
+        }
+      })
+      .catch(() => {});
+  }
+
+  function showUndo(card) {
+    if (!toast) return;
+    const title = card.dataset.title || "Listing";
+    const short = title.length > 30 ? title.slice(0, 29) + "…" : title;
+    if (toastLabel) toastLabel.textContent = "Removed " + short;
+    toast.dataset.cardId = card.dataset.id;
+    toast.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), UNDO_MS);
+  }
+
+  function deleteCard(card) {
+    const id = card.dataset.id;
+    const surface = card.querySelector(".card-surface");
+    card.dataset.swipeOpen = "";
+    card.classList.remove("swipe-commit");
+    if (surface) {
+      surface.style.transition = "transform .18s ease";
+      surface.style.transform = "translateX(-115%)";
+    }
+    const h = card.getBoundingClientRect().height;
+    card.style.height = h + "px";
+    requestAnimationFrame(() => {
+      card.style.overflow = "hidden";
+      card.style.transition = "height .2s ease .02s, opacity .2s ease, margin .2s ease";
+      card.style.height = "0px";
+      card.style.opacity = "0";
+      card.style.marginTop = "0";
+      card.style.marginBottom = "0";
+    });
+    setTimeout(() => {
+      card.hidden = true;
+      card.style.height = card.style.opacity = card.style.transition = "";
+      card.style.overflow = card.style.marginTop = card.style.marginBottom = "";
+      card.classList.remove("swipe-active");
+      if (surface) { surface.style.transition = ""; surface.style.transform = ""; }
+    }, 240);
+
+    const prevFeedback = feedbackData[id];
+    dismissedIds[id] = { ts: Date.now() };
+    writeLocal(localDismissKey, dismissedIds);
+    // The same listing can render in more than one section; hide the other
+    // copies right away so the dismissal is consistent before any reload.
+    cards.forEach(other => { if (other !== card && other.dataset.id === id) other.hidden = true; });
+    if (pendingDeletes.has(id)) clearTimeout(pendingDeletes.get(id).timer);
+    const timer = setTimeout(() => { postFeedbackBad(card); pendingDeletes.delete(id); }, FEEDBACK_DELAY_MS);
+    pendingDeletes.set(id, { timer, prevFeedback });
+    updateCounts();
+    showUndo(card);
+  }
+
+  function restoreCard(card) {
+    const id = card.dataset.id;
+    const pending = pendingDeletes.get(id);
+    if (pending) { clearTimeout(pending.timer); pendingDeletes.delete(id); }
+    delete dismissedIds[id];
+    writeLocal(localDismissKey, dismissedIds);
+    if (pending) {
+      if (pending.prevFeedback) feedbackData[id] = pending.prevFeedback;
+      else delete feedbackData[id];
+      writeLocal(localFeedbackKey, feedbackData);
+    }
+    const surface = card.querySelector(".card-surface");
+    card.hidden = false;
+    card.classList.remove("swipe-active", "swipe-commit");
+    card.style.height = card.style.opacity = card.style.transition = "";
+    card.style.overflow = card.style.marginTop = card.style.marginBottom = "";
+    if (surface) { surface.style.transition = "none"; surface.style.transform = "translateX(0)"; }
+    card.dataset.swipeOpen = "";
+    updateCounts();
+    applyFeedbackBadges();
+    applyFilters();
+  }
+
+  function initSwipe(card) {
+    const surface = card.querySelector(".card-surface");
+    const deleteTab = card.querySelector(".card-delete");
+    if (!surface) return;
+    let startX = 0, startY = 0, base = 0, curX = 0;
+    let dragging = false, decided = false, horizontal = false, pid = null;
+
+    surface.addEventListener("pointerdown", e => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      dragging = true; decided = false; horizontal = false; pid = e.pointerId;
+      startX = e.clientX; startY = e.clientY;
+      base = card.dataset.swipeOpen === "1" ? -OPEN_PX : 0;
+      curX = base;
+      surface.style.transition = "none";
+    });
+
+    surface.addEventListener("pointermove", e => {
+      if (!dragging || e.pointerId !== pid) return;
+      const mx = e.clientX - startX;
+      const my = e.clientY - startY;
+      if (!decided) {
+        if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+        decided = true;
+        horizontal = Math.abs(mx) > Math.abs(my) + 2;
+        if (horizontal) {
+          try { surface.setPointerCapture(pid); } catch (_) {}
+          closeOpenCards(card);
+        }
+      }
+      if (!horizontal) return;
+      e.preventDefault();
+      let x = base + mx;
+      if (x > 0) x = 0;
+      x = Math.max(x, -cardWidth(card));
+      curX = x;
+      setSurfaceX(card, surface, x, false);
+      card.classList.toggle("swipe-commit", Math.abs(x) >= commitThreshold(card));
+    });
+
+    function finish() {
+      if (!dragging) return;
+      dragging = false;
+      try { surface.releasePointerCapture(pid); } catch (_) {}
+      if (!horizontal) {
+        // a tap (no horizontal drag): if the card is open, swallow the tap and close it
+        if (base < 0) {
+          card.dataset.swipeOpen = "";
+          setSurfaceX(card, surface, 0, true);
+          suppressClick(surface);
+        }
+        return;
+      }
+      if (Math.abs(curX) > 6) suppressClick(surface);
+      card.classList.remove("swipe-commit");
+      if (Math.abs(curX) >= commitThreshold(card)) { deleteCard(card); return; }
+      if (Math.abs(curX) >= REVEAL_PX) {
+        card.dataset.swipeOpen = "1";
+        setSurfaceX(card, surface, -OPEN_PX, true);
+      } else {
+        card.dataset.swipeOpen = "";
+        setSurfaceX(card, surface, 0, true);
+      }
+    }
+
+    surface.addEventListener("pointerup", finish);
+    surface.addEventListener("pointercancel", () => {
+      if (!dragging) return;
+      dragging = false;
+      setSurfaceX(card, surface, card.dataset.swipeOpen === "1" ? -OPEN_PX : 0, true);
+    });
+    if (deleteTab) deleteTab.addEventListener("click", () => deleteCard(card));
+  }
+
+  if (toastBtn) {
+    toastBtn.addEventListener("click", () => {
+      const id = toast.dataset.cardId;
+      const card = cards.find(c => c.dataset.id === id);
+      if (card) restoreCard(card);
+      toast.classList.remove("show");
+    });
+  }
+
+  mergeLocalState();
+  applyFilters();
+  applyFeedbackBadges();
+  cards.forEach(initSwipe);
+  updateCounts();
+  loadServerFeedback();
+})();
+</script>
+</body>
+</html>
